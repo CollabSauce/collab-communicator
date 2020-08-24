@@ -1,10 +1,11 @@
 {
-  "name": "webpack-starter",
+  "name": "collab-communicator",
   "version": "1.0.0",
-  "description": "A light foundation for your next frontend project based on webpack.",
+  "description": "Communicator between collab-integration-tool and client-website",
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack --config webpack/webpack.config.prod.js --colors",
-    "start": "webpack-dev-server --open --config webpack/webpack.config.dev.js"
+    "start": "webpack-dev-server --open --config webpack/webpack.config.dev.js",
+    "deploy": "netlify deploy --prod"
   },
   "repository": {
     "type": "git",

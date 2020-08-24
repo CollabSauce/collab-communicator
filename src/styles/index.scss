@@ -1,6 +1,29 @@
-$body-color: slateblue;
 
-body {
-  color: $body-color;
-  font-family: sans-serif;
+.CollabSauce__outline__ {
+  outline: 2px solid #6585FF !important;
+  &:active {
+    outline: 2px solid red !important;
+  }
 }
+
+.CollabSauce__crosshair__ {
+  cursor: crosshair;
+
+  a {
+    cursor: crosshair;
+  }
+}
+
+
+#collab-sauce-iframe {
+  /* same zIndex that intercom uses */
+  z-index: 2147483647;
+  position: fixed;
+  right: 0px;
+  top: 0px;
+  width: 250px;
+  height: 100%;
+  cursor: initial;
+  background-color: grey;
+}
+
