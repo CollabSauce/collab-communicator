@@ -8,6 +8,10 @@ module.exports = merge(common, {
   devtool: 'source-map',
   stats: 'errors-only',
   bail: true,
+  entry: {
+    app: Path.resolve(__dirname, '../src/scripts/index.js'),
+    kickoff: Path.resolve(__dirname, '../src/scripts/kickoff.js'),
+  },
   output: {
     filename: 'js/[name].[chunkhash:8].js',
     chunkFilename: 'js/[name].[chunkhash:8].chunk.js',

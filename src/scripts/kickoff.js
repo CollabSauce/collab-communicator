@@ -25,7 +25,7 @@ ready.docReady(() => {
     l1.async = true;
     l1.href = 'https://elastic-shirley-01d13c.netlify.app/bundle.css';
     document.head.appendChild(l1);
-  }
+  };
 
   loadStyleLink();
   loadS1();

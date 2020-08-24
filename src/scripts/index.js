@@ -6,7 +6,6 @@ if (process.env.NODE_ENV === 'development') {
   require('../index.html');
 }
 
-// const iframeSrc = true ? 'http://localhost:3000' : 'https://wizardly-volhard-e87a31.netlify.app';
 const iframeSrc = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://wizardly-volhard-e87a31.netlify.app';
 
 ready.docReady(() => {
