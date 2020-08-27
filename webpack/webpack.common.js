@@ -10,6 +10,8 @@ module.exports = {
   output: {
     path: Path.join(__dirname, '../build'),
     filename: 'js/[name].js',
+    // https://medium.jonasbandi.net/hosting-multiple-react-applications-on-the-same-document-c887df1a1fcd
+    jsonpFunction: 'webpackJsonpCollabSauce'
   },
   optimization: {
     splitChunks: {
