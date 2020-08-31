@@ -6,13 +6,13 @@ if (process.env.NODE_ENV === 'development') {
   require('../index.html');
 }
 
-const iframeSrc = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://wizardly-volhard-e87a31.netlify.app';
+const iframeSrc = process.env.NODE_ENV === 'development' ? 'http://localhost:3001' : 'https://wizardly-volhard-e87a31.netlify.app';
 
 ready.docReady(() => {
   // load styles and scripts
   const iframe = document.createElement('iframe');
   iframe.src = iframeSrc;
-  iframe.class = 'collab-sauce';
+  iframe.className = 'collab-sauce collab-sauce-hidden';
   iframe.id = 'collab-sauce-iframe';
   document.body.appendChild(iframe);
 
@@ -63,17 +63,43 @@ ready.docReady(() => {
   };
 
   const receiveMessage = (e) => {
-    let styleAttrsToSet;
     try {
       const message = JSON.parse(e.data);
-      if (message.type !== 'setStyleAttribute') { return; }
-      styleAttrsToSet = message.styleAttrsToSet;
+      messageRouting[message.type] && messageRouting[message.type](message);
     } catch (err) {
       return;
     }
-    Object.keys(styleAttrsToSet).forEach((styleKey) => {
-      currentClickTarget.style.setProperty(styleKey, styleAttrsToSet[styleKey], 'important');
-    });
+  };
+
+  const messageRouting = {
+    setStyleAttribute: (message) => {
+      const styleAttrsToSet = message.styleAttrsToSet;
+      Object.keys(styleAttrsToSet).forEach((styleKey) => {
+        currentClickTarget.style.setProperty(styleKey, styleAttrsToSet[styleKey], 'important');
+      });
+    },
+    hideToolbar: (message) => {
+      document.getElementById('collab-sauce-iframe').classList.add('collab-sauce-hidden');
+      document.getElementById('collab-sauce-sauceButton').classList.remove('collab-sauce-hidden');
+      document.getElementById('collab-sauce-iframe').classList.remove('show-full-toolbar');
+      removeElementSelections();
+    },
+    hideFullToolbar: (message) => {
+      document.getElementById('collab-sauce-iframe').classList.remove('show-full-toolbar');
+      removeElementSelections();
+    },
+    showFullToolbar: (message) => {
+      document.getElementById('collab-sauce-iframe').classList.add('show-full-toolbar');
+      document.body.addEventListener('mouseover', onMouseOver);
+      document.body.classList.add('CollabSauce__crosshair__');
+    },
+  };
+
+  const removeElementSelections = () => {
+    document.body.removeEventListener('mouseover', onMouseOver);
+    document.body.classList.remove('CollabSauce__crosshair__');
+    currentMouseOverTarget.classList.remove('CollabSauce__outline__');
+    currentMouseOverTarget.removeEventListener('click', onClick);
   };
 
   const fixBorderWidth = (targetStyle, currentClickTarget) => {
@@ -103,8 +129,20 @@ ready.docReady(() => {
     return widthObj;
   };
 
-  document.body.addEventListener('mouseover', onMouseOver);
-  document.body.classList.add('CollabSauce__crosshair__');
-
+  // listen on all messages from iframe
   window.addEventListener('message', receiveMessage);
+
+  // create the sauceButton
+  const sauceButton = document.createElement('div');
+  sauceButton.id = 'collab-sauce-sauceButton';
+  sauceButton.className = 'collab-sauce-sauceButton';
+  document.body.appendChild(sauceButton);
+
+  // listen on click of the button
+  sauceButton.addEventListener('click', () => {
+    sauceButton.classList.add('collab-sauce-hidden');
+    iframe.classList.remove('collab-sauce-hidden');
+    const message = { type: 'setParentOrigin' };
+    document.getElementById('collab-sauce-iframe').contentWindow.postMessage(JSON.stringify(message), iframeSrc);
+  });
 });

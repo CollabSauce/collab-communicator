@@ -1,29 +1,64 @@
 
 .CollabSauce__outline__ {
-  outline: 2px solid #6585FF !important;
+  outline: 2px solid #00D27B !important;
   &:active {
     outline: 2px solid red !important;
   }
 }
 
 .CollabSauce__crosshair__ {
+  // cursor: url("../assets/selection-cursor.svg"), auto;
   cursor: crosshair;
 
   a {
+    // cursor: url("../assets/selection-cursor.svg"), auto;
     cursor: crosshair;
   }
 }
 
 
 #collab-sauce-iframe {
+  z-index: 2147483600;
   /* same zIndex that intercom uses */
-  z-index: 2147483647;
+  // z-index: 2147483647;
   position: fixed;
   right: 0px;
   top: 0px;
-  width: 250px;
+  width: 60px;
   height: 100%;
   cursor: initial;
-  background-color: grey;
+  border: none;
+
+  &.show-full-toolbar {
+    width: 250px;
+  }
 }
 
+.collab-sauce-hidden {
+  display: none;
+}
+
+.collab-sauce-sauceButton {
+  z-index: 2147483600;
+  /* same zIndex that intercom uses */
+  // z-index: 2147483647;
+  position: fixed;
+  cursor: pointer;
+  right: 30px;
+  top: 30px;
+  height: 50px;
+  width: 50px;
+  outline: none;
+  background-color: #27ae60;
+  border: none;
+  border-radius:25px;
+}
+
+.collab-sauce-sauceButton:hover{
+  background-color: #2ecc71;
+}
+
+.collab-sauce-sauceButton:active {
+  background-color: #2ecc71;
+  transform: translateY(4px);
+}
