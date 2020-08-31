@@ -1,6 +1,7 @@
 import '../styles/index.scss';
 import { ready } from './docready';
 import { getDomPath } from './getDomPath';
+import { createBanner } from './createBanner';
 
 if (process.env.NODE_ENV === 'development') {
   require('../index.html');
@@ -16,6 +17,8 @@ ready.docReady(() => {
   iframe.id = 'collab-sauce-iframe';
   document.body.appendChild(iframe);
 
+
+  let shadowDivHolder;
   let currentMouseOverTarget;
   let currentClickTarget;
 
@@ -32,8 +35,13 @@ ready.docReady(() => {
     if (toolbar.isEqualNode(e.target) || isParent(e.target, toolbar)) {
       return;
     }
+    if (shadowDivHolder.isEqualNode(e.target) || isParent(e.target, shadowDivHolder)) {
+      return;
+    }
 
     e.preventDefault();
+    document.getElementById('collab-sauce-iframe').classList.remove('collab-sauce-hidden');
+    messageRouting.showFullToolbar();
     currentClickTarget = e.target;
 
     // dispatch event to iframe
@@ -50,6 +58,9 @@ ready.docReady(() => {
   const onMouseOver = (e) => {
     const toolbar = document.getElementById('collab-sauce-iframe');
     if (toolbar.isEqualNode(e.target) || isParent(e.target, toolbar)) {
+      return;
+    }
+    if (shadowDivHolder.isEqualNode(e.target) || isParent(e.target, shadowDivHolder)) {
       return;
     }
 
@@ -78,22 +89,35 @@ ready.docReady(() => {
         currentClickTarget.style.setProperty(styleKey, styleAttrsToSet[styleKey], 'important');
       });
     },
-    hideToolbar: (message) => {
+    hideToolbar: () => {
       document.getElementById('collab-sauce-iframe').classList.add('collab-sauce-hidden');
       document.getElementById('collab-sauce-sauceButton').classList.remove('collab-sauce-hidden');
       document.getElementById('collab-sauce-iframe').classList.remove('show-full-toolbar');
       removeElementSelections();
     },
-    hideFullToolbar: (message) => {
+    hideFullToolbar: () => {
       document.getElementById('collab-sauce-iframe').classList.remove('show-full-toolbar');
       removeElementSelections();
     },
-    showFullToolbar: (message) => {
+    showFullToolbar: () => {
       document.getElementById('collab-sauce-iframe').classList.add('show-full-toolbar');
+    },
+    enterSelectionMode: () => {
+      document.getElementById('collab-sauce-iframe').classList.add('collab-sauce-hidden');
+      document.body.appendChild(shadowDivHolder);
       document.body.addEventListener('mouseover', onMouseOver);
       document.body.classList.add('CollabSauce__crosshair__');
-    },
+    }
   };
+
+  const exitSelectionMode = () => {
+    document.body.removeChild(shadowDivHolder);
+    document.getElementById('collab-sauce-iframe').classList.remove('collab-sauce-hidden');
+    removeElementSelections();
+  };
+
+  // create the "edit" banner. Use a shadow-dom so our styles are consistent on any webpage
+  shadowDivHolder = createBanner(exitSelectionMode);
 
   const removeElementSelections = () => {
     document.body.removeEventListener('mouseover', onMouseOver);
