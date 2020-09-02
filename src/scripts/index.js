@@ -41,6 +41,9 @@ ready.docReady(() => {
 
     e.preventDefault();
     document.getElementById('collab-sauce-iframe').classList.remove('collab-sauce-hidden');
+    document.body.removeChild(shadowDivHolder);
+    document.body.removeEventListener('mouseover', onMouseOver);
+    currentMouseOverTarget.removeEventListener('click', onClick);
     messageRouting.showFullToolbar();
     currentClickTarget = e.target;
 
