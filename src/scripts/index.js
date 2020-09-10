@@ -14,7 +14,7 @@ ready.docReady(() => {
   // load styles and scripts
   const iframe = document.createElement('iframe');
   iframe.src = iframeSrc;
-  iframe.className = 'collab-sauce collab-sauce-hidden';
+  iframe.className = 'collab-sauce collab-sauce-hidden collab-sauce-frame-right';
   iframe.id = 'collab-sauce-iframe';
   iframe.onload = () => { resetAll(); };
   document.body.appendChild(iframe);
@@ -120,6 +120,19 @@ ready.docReady(() => {
       document.body.appendChild(shadowDivHolder);
       document.body.addEventListener('mouseover', onMouseOver);
       document.body.classList.add('CollabSauce__crosshair__');
+    },
+    newAlignment: (message) => {
+      const iframe = document.getElementById('collab-sauce-iframe');
+      if (message.alignmentType === 'Right') {
+        iframe.classList.add('collab-sauce-frame-right');
+        iframe.classList.remove('collab-sauce-frame-left', 'collab-sauce-frame-down');
+      } else if (message.alignmentType === 'Left') {
+        iframe.classList.add('collab-sauce-frame-left');
+        iframe.classList.remove('collab-sauce-frame-right', 'collab-sauce-frame-down');
+      } else if (message.alignmentType === 'Down') {
+        iframe.classList.add('collab-sauce-frame-down');
+        iframe.classList.remove('collab-sauce-frame-left', 'collab-sauce-frame-right');
+      }
     }
   };
 

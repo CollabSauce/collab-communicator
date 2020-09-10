@@ -22,16 +22,33 @@
   /* same zIndex that intercom uses */
   // z-index: 2147483647;
   position: fixed;
-  right: 0px;
-  top: 0px;
-  width: 60px;
-  height: 100%;
   cursor: initial;
   border: none;
 
   &.show-full-toolbar {
     width: 340px;
   }
+}
+
+.collab-sauce-frame-right {
+  right: 0px;
+  top: 0px;
+  width: 60px;
+  height: 100%;
+}
+
+.collab-sauce-frame-left {
+  left: 0px;
+  top: 0px;
+  width: 60px;
+  height: 100%;
+}
+
+.collab-sauce-frame-down {
+  left: 0px;
+  top: 0px;
+  width: 60px;
+  height: 100%;
 }
 
 .collab-sauce-hidden {
