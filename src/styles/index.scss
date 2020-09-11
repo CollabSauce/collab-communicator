@@ -24,6 +24,7 @@
   position: fixed;
   cursor: initial;
   border: none;
+  width: 60px;
 
   &.show-full-toolbar {
     width: 340px;
@@ -32,23 +33,30 @@
 
 .collab-sauce-frame-right {
   right: 0px;
-  top: 0px;
-  width: 60px;
-  height: 100%;
 }
 
 .collab-sauce-frame-left {
   left: 0px;
+}
+
+.collab-sauce-frame-top {
   top: 0px;
-  width: 60px;
+}
+
+.collab-sauce-frame-bottom {
+  bottom: 0px;
+}
+
+.collab-sauce-frame-full {
   height: 100%;
 }
 
-.collab-sauce-frame-down {
-  left: 0px;
-  top: 0px;
-  width: 60px;
-  height: 100%;
+.collab-sauce-frame-half {
+  height: 50%;
+}
+
+.collab-sauce-frame-quarter {
+  height: 25%;
 }
 
 .collab-sauce-hidden {

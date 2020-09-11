@@ -14,7 +14,7 @@ ready.docReady(() => {
   // load styles and scripts
   const iframe = document.createElement('iframe');
   iframe.src = iframeSrc;
-  iframe.className = 'collab-sauce collab-sauce-hidden collab-sauce-frame-right';
+  iframe.className = 'collab-sauce collab-sauce-hidden collab-sauce-frame-right collab-sauce-frame-top collab-sauce-frame-full';
   iframe.id = 'collab-sauce-iframe';
   iframe.onload = () => { resetAll(); };
   document.body.appendChild(iframe);
@@ -125,13 +125,29 @@ ready.docReady(() => {
       const iframe = document.getElementById('collab-sauce-iframe');
       if (message.alignmentType === 'Right') {
         iframe.classList.add('collab-sauce-frame-right');
-        iframe.classList.remove('collab-sauce-frame-left', 'collab-sauce-frame-down');
+        iframe.classList.remove('collab-sauce-frame-left');
       } else if (message.alignmentType === 'Left') {
         iframe.classList.add('collab-sauce-frame-left');
-        iframe.classList.remove('collab-sauce-frame-right', 'collab-sauce-frame-down');
-      } else if (message.alignmentType === 'Down') {
-        iframe.classList.add('collab-sauce-frame-down');
-        iframe.classList.remove('collab-sauce-frame-left', 'collab-sauce-frame-right');
+        iframe.classList.remove('collab-sauce-frame-right');
+      } else if (message.alignmentType === 'Top') {
+        iframe.classList.add('collab-sauce-frame-top');
+        iframe.classList.remove('collab-sauce-frame-bottom');
+      } else if (message.alignmentType === 'Bottom') {
+        iframe.classList.add('collab-sauce-frame-bottom');
+        iframe.classList.remove('collab-sauce-frame-top');
+      }
+    },
+    newSizing: (message) => {
+      const iframe = document.getElementById('collab-sauce-iframe');
+      if (message.sizeType === 'Full') {
+        iframe.classList.add('collab-sauce-frame-full');
+        iframe.classList.remove('collab-sauce-frame-half', 'collab-sauce-frame-quarter');
+      } else if (message.sizeType === 'Half') {
+        iframe.classList.add('collab-sauce-frame-half');
+        iframe.classList.remove('collab-sauce-frame-full', 'collab-sauce-frame-quarter');
+      } else if (message.sizeType === 'Quarter') {
+        iframe.classList.add('collab-sauce-frame-quarter');
+        iframe.classList.remove('collab-sauce-frame-half', 'collab-sauce-frame-full');
       }
     }
   };
