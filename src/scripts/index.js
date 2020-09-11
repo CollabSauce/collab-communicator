@@ -62,9 +62,13 @@ ready.docReady(() => {
     const updatedWidthObj = fixBorderWidth(targetStyling, currentClickTarget);
     const targetStyle = { ...targetStyling, ...updatedWidthObj };
     const targetDomPath = getDomPath(currentClickTarget);
-    const targetCssText = currentClickTarget.style.cssTest;
+    const targetInElementStyling = {};
+    currentClickTarget.style.forEach(key => {
+      targetInElementStyling[key] = currentClickTarget.style[key]
+    });
+    const targetCssText = currentClickTarget.style.cssText;
     const targetId = currentClickTarget.id;
-    const message = { type: 'newClickedTarget', targetStyle, targetDomPath, targetCssText, targetId };
+    const message = { type: 'newClickedTarget', targetStyle, targetDomPath, targetCssText, targetInElementStyling, targetId };
     document.getElementById('collab-sauce-iframe').contentWindow.postMessage(JSON.stringify(message), iframeSrc);
   };
 
@@ -101,6 +105,10 @@ ready.docReady(() => {
       Object.keys(styleAttrsToSet).forEach((styleKey) => {
         currentClickTarget.style.setProperty(styleKey, styleAttrsToSet[styleKey], 'important');
       });
+    },
+    restoreChanges: (message) => {
+      const originalCssText = message.originalCssText;
+      currentClickTarget.style.cssText = originalCssText;
     },
     hideToolbar: () => {
       document.getElementById('collab-sauce-iframe').classList.add('collab-sauce-hidden');
