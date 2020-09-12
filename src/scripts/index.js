@@ -68,7 +68,18 @@ ready.docReady(() => {
     });
     const targetCssText = currentClickTarget.style.cssText;
     const targetId = currentClickTarget.id;
-    const message = { type: 'newClickedTarget', targetStyle, targetDomPath, targetCssText, targetInElementStyling, targetId };
+    const targetWindowDimensions = { width: window.innerWidth, height: window.innerHeight };
+    const targetLocationOrigin = window.location.origin;
+    const message = {
+      type: 'newClickedTarget',
+      targetStyle,
+      targetDomPath,
+      targetCssText,
+      targetInElementStyling,
+      targetId,
+      targetWindowDimensions,
+      targetLocationOrigin
+    };
     document.getElementById('collab-sauce-iframe').contentWindow.postMessage(JSON.stringify(message), iframeSrc);
   };
 
