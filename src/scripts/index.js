@@ -1,7 +1,10 @@
+import $ from 'jquery';
+
 import '../styles/index.scss';
 import { ready } from './docready';
 import { getDomPath } from './getDomPath';
 import { createBanner } from './createBanner';
+import { copyHtml } from './copyHtml';
 
 if (process.env.NODE_ENV === 'development') {
   require('../index.html');
@@ -49,6 +52,12 @@ ready.docReady(() => {
       return;
     }
 
+    const dataCollabSelectedElement = document.querySelector('[data-collab-selected-element]');
+    if (dataCollabSelectedElement) {
+      // remove the [data-collab-selected-element] if applicable
+      dataCollabSelectedElement.removeAttribute('data-collab-selected-element');
+    }
+
     e.preventDefault();
     document.getElementById('collab-sauce-iframe').classList.remove('collab-sauce-hidden');
     document.body.removeChild(shadowDivHolder);
@@ -56,6 +65,7 @@ ready.docReady(() => {
     currentMouseOverTarget.removeEventListener('click', onClick);
     messageRouting.showFullToolbar();
     currentClickTarget = e.target;
+    currentClickTarget.setAttribute('data-collab-selected-element', 'true');
 
     // dispatch event to iframe
     const targetStyling = getComputedStyle(currentClickTarget);
@@ -64,21 +74,17 @@ ready.docReady(() => {
     const targetDomPath = getDomPath(currentClickTarget);
     const targetInElementStyling = {};
     currentClickTarget.style.forEach(key => {
-      targetInElementStyling[key] = currentClickTarget.style[key]
+      targetInElementStyling[key] = currentClickTarget.style[key];
     });
     const targetCssText = currentClickTarget.style.cssText;
     const targetId = currentClickTarget.id;
-    const targetWindowDimensions = { width: window.innerWidth, height: window.innerHeight };
-    const targetLocationOrigin = window.location.origin;
     const message = {
       type: 'newClickedTarget',
       targetStyle,
       targetDomPath,
       targetCssText,
       targetInElementStyling,
-      targetId,
-      targetWindowDimensions,
-      targetLocationOrigin
+      targetId
     };
     document.getElementById('collab-sauce-iframe').contentWindow.postMessage(JSON.stringify(message), iframeSrc);
   };
@@ -168,6 +174,14 @@ ready.docReady(() => {
         iframe.classList.add('collab-sauce-frame-quarter');
         iframe.classList.remove('collab-sauce-frame-half', 'collab-sauce-frame-full');
       }
+    },
+    getInfoFromCommunicatorToCreateTask: () => {
+      const html = copyHtml();
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      const url_origin = window.location.origin;
+      const message = { type: 'createTaskWithInfo', html, width, height, url_origin };
+      document.getElementById('collab-sauce-iframe').contentWindow.postMessage(JSON.stringify(message), iframeSrc);
     }
   };
 
