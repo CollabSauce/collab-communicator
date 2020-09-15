@@ -2,16 +2,14 @@
 .CollabSauce__outline__ {
   outline: 2px solid #00D27B !important;
   &:active {
-    outline: 2px solid red !important;
+    outline: 2px solid #00D27B78 !important;
   }
 }
 
 .CollabSauce__crosshair__ {
-  // cursor: url("../assets/selection-cursor.svg"), auto;
   cursor: crosshair;
 
   a {
-    // cursor: url("../assets/selection-cursor.svg"), auto;
     cursor: crosshair;
   }
 }

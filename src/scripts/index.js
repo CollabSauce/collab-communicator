@@ -175,7 +175,7 @@ ready.docReady(() => {
         iframe.classList.remove('collab-sauce-frame-half', 'collab-sauce-frame-full');
       }
     },
-    getInfoFromCommunicatorToCreateTask: () => {
+    getInfoForCreateTask: () => {
       const html = copyHtml();
       const width = window.innerWidth;
       const height = window.innerHeight;
