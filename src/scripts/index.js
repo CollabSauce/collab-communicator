@@ -182,7 +182,10 @@ ready.docReady(() => {
       const url_origin = window.location.origin;
       const message = { type: 'createTaskWithInfo', html, width, height, url_origin };
       document.getElementById('collab-sauce-iframe').contentWindow.postMessage(JSON.stringify(message), iframeSrc);
-    }
+    },
+    exitTaskCreationMode: () => {
+      removeElementSelections();
+    },
   };
 
   const exitSelectionMode = () => {
