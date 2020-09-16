@@ -186,6 +186,18 @@ ready.docReady(() => {
     exitTaskCreationMode: () => {
       removeElementSelections();
     },
+    fetchTaskDomMap: (message) => {
+      const taskDomMap = message.taskDomData.reduce((mapObj, { id, targetId, targetDomPath }) => {
+        let element = document.getElementById(targetId);
+        if (!element) {
+          element = document.querySelector(targetDomPath);
+        }
+        return { ...mapObj, [id]: !!element };
+      }, {});
+      // taskDomMap[103] = false;
+      const returnMessage = { type: 'taskDomMap', taskDomMap };
+      document.getElementById('collab-sauce-iframe').contentWindow.postMessage(JSON.stringify(returnMessage), iframeSrc);
+    }
   };
 
   const exitSelectionMode = () => {
