@@ -188,16 +188,71 @@ ready.docReady(() => {
     },
     fetchTaskDomMap: (message) => {
       const taskDomMap = message.taskDomData.reduce((mapObj, { id, targetId, targetDomPath }) => {
-        let element = document.getElementById(targetId);
-        if (!element) {
-          element = document.querySelector(targetDomPath);
-        }
+        const element = findElement(targetId, targetDomPath);
         return { ...mapObj, [id]: !!element };
       }, {});
-      // taskDomMap[103] = false;
+      // taskDomMap[103] = false; // for testing purposes
       const returnMessage = { type: 'taskDomMap', taskDomMap };
       document.getElementById('collab-sauce-iframe').contentWindow.postMessage(JSON.stringify(returnMessage), iframeSrc);
+    },
+    viewDesignChange: ({ domItemData }) => {
+      // Used in TasksSummary view.
+      const { targetId, targetDomPath, designEdits } = domItemData;
+      const element = findElement(targetId, targetDomPath);
+
+      // return the element's cssText so we can re-apply it later
+      const originalDomItemCssText = element.style.cssText;
+      const returnMessage = { type: 'selectedDomItemCssText', originalDomItemCssText };
+      document.getElementById('collab-sauce-iframe').contentWindow.postMessage(JSON.stringify(returnMessage), iframeSrc);
+
+      // scroll element into view, highlight element, apply design changes
+      element.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center'});
+      element.classList.add('CollabSauce__outline__Non-Edit_Mode');
+      element.style.cssText = designEdits;
+    },
+    restoreDesignChange: ({ domItemData }) => {
+      // Used in TasksSummary view.
+      const { targetId, targetDomPath, originalCssText } = domItemData;
+      const element = findElement(targetId, targetDomPath);
+
+      // scroll element into view, unhighlight element, unapply design changes
+      element.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center'});
+      element.classList.remove('CollabSauce__outline__Non-Edit_Mode');
+      element.style.cssText = originalCssText;
+    },
+    selectTaskOnDom: ({ domItemData }) => {
+      // Similar to viewDesignChange, but doesn't apply any changes. Used in TaskDetail view.
+      const { targetId, targetDomPath } = domItemData;
+      const element = findElement(targetId, targetDomPath);
+
+      element.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center'});
+      element.classList.add('CollabSauce__outline__Non-Edit_Mode');
+    },
+    restoreDesignChangeKeepSelected: ({ domItemData }) => {
+      // Similar to restoreDesignChange, but doesn't unselect the task. Used in TaskDetail view.
+      const { targetId, targetDomPath, originalCssText } = domItemData;
+      const element = findElement(targetId, targetDomPath);
+
+      // unapply design changes
+      element.style.cssText = originalCssText;
+    },
+    unselectTaskOnDom: ({ domItemData }) => {
+      // Similar to restoreDesignChange, but doesn't undo any design changes, just unselects the element. Used in TaskDetail view.
+      const { targetId, targetDomPath } = domItemData;
+      const element = findElement(targetId, targetDomPath);
+
+      // unhighlight element
+      element.classList.remove('CollabSauce__outline__Non-Edit_Mode');
+    },
+
+  };
+
+  const findElement = (targetId, targetDomPath) => {
+    let element = document.getElementById(targetId);
+    if (!element) {
+      element = document.querySelector(targetDomPath);
     }
+    return element;
   };
 
   const exitSelectionMode = () => {
