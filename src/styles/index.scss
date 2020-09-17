@@ -61,10 +61,6 @@
   height: 25%;
 }
 
-.collab-sauce-hidden {
-  display: none;
-}
-
 .collab-sauce-sauceButton {
   z-index: 2147483600;
   /* same zIndex that intercom uses */
@@ -76,16 +72,30 @@
   height: 50px;
   width: 50px;
   outline: none;
-  background-color: #27ae60;
+  background-color: #5955E9;
   border: none;
   border-radius:25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  -webkit-box-shadow: 1px 3px 9px 0px rgba(173,173,173,1);
+  -moz-box-shadow: 1px 3px 9px 0px rgba(173,173,173,1);
+  box-shadow: 1px 3px 9px 0px rgba(173,173,173,1);
 }
 
 .collab-sauce-sauceButton:hover{
-  background-color: #2ecc71;
+  background-color: #4340c7;
 }
 
 .collab-sauce-sauceButton:active {
-  background-color: #2ecc71;
-  transform: translateY(4px);
+  background-color: #3a38ab;
+}
+
+.collab-sauce-sauceBottle {
+  width: 12px;
+}
+
+.collab-sauce-hidden {
+  display: none;
 }

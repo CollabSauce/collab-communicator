@@ -331,6 +331,10 @@ ready.docReady(() => {
   const sauceButton = document.createElement('div');
   sauceButton.id = 'collab-sauce-sauceButton';
   sauceButton.className = 'collab-sauce-sauceButton';
+  const sauceButtonImg = document.createElement('img');
+  sauceButtonImg.src = 'src/assets/sauce-bottle.svg';
+  sauceButtonImg.className = 'collab-sauce-sauceBottle';
+  sauceButton.appendChild(sauceButtonImg);
   document.body.appendChild(sauceButton);
 
   // listen on click of the button
