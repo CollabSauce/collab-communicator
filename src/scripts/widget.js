@@ -6,7 +6,7 @@ ready.docReady(() => {
     const s2 = document.createElement("script");
     s2.type = "text/javascript";
     s2.async = true;
-    s2.src = 'https://staging-collab-widget.netlify.app/js/app.79189c5f.js';
+    s2.src = 'https://staging-collab-widget.netlify.app/js/app.1cd69b83.js';
     document.body.appendChild(s2);
   };
 
