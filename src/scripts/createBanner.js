@@ -4,6 +4,7 @@ export const createBanner = (onExit) => {
   shadowDivHolder.style.top = '0px';
   shadowDivHolder.style.left = '0px';
   shadowDivHolder.style.right = '0px';
+  shadowDivHolder.zIndex = 2147483600;
 
   // create the shadow dom within the shadowDivHolder
   const shadowDomBannerContainer = shadowDivHolder.attachShadow({mode: 'open'});
