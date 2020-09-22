@@ -11,7 +11,7 @@ module.exports = merge(common, {
   bail: true,
   entry: {
     app: Path.resolve(__dirname, '../src/scripts/index.js'),
-    kickoff: Path.resolve(__dirname, '../src/scripts/kickoff.js'),
+    widget: Path.resolve(__dirname, '../src/scripts/widget.js'),
   },
   output: {
     filename: 'js/[name].[chunkhash:8].js',

@@ -36,9 +36,9 @@ When you run `npm run build` we use the [mini-css-extract-plugin](https://github
 
 THIS IS HACKY (VERY VERY HACKY):
 * `yarn build`
-* Go to the index.html file, copy the unique `app.[HASH].js` and `chunk.[].js` files, and paste it into to the appropriate spots in kickoff.js
-* run `yarn build` again. Make sure the hashes in the above files didn't change. Only kickoff.js should change.
-* go to `build/js` and change `kickoff.[HASH].js` to `kickoff.js`. I.e. remove the hash.
-* go to `build/js` and change `kickoff.[HASH].js.map to `kickoff.js.map`. I.e. remove the hash.
-* go to `build/js/kickoff.js` and change the sourceMap url from `kickoff.[HASH].js.map` to `kickoff.js.map`.
+* Go to the index.html file, copy the unique `app.[HASH].js` and `chunk.[].js` files, and paste it into to the appropriate spots in widget.js
+* run `yarn build` again. Make sure the hashes in the above files didn't change. Only widget.js should change.
+* go to `build/js` and change `widget.[HASH].js` to `widget.js`. I.e. remove the hash.
+* go to `build/js` and change `widget.[HASH].js.map to `widget.js.map`. I.e. remove the hash.
+* go to `build/js/widget.js` and change the sourceMap url from `widget.[HASH].js.map` to `widget.js.map`.
 * `yarn deploy`

@@ -28,7 +28,7 @@ export const createBanner = (onExit) => {
 
   // Create the elements that will live inside the shadowDom
   const downArrow = document.createElement('img');
-  downArrow.src = 'src/assets/down-arrow.png';
+  downArrow.src = '../assets/down-arrow.png';
   downArrow.height = 15;
   downArrow.style.cursor = 'pointer';
   downArrow.onclick = () => {
@@ -39,7 +39,7 @@ export const createBanner = (onExit) => {
   };
 
   const upArrow = document.createElement('img');
-  upArrow.src = 'src/assets/up-arrow.png';
+  upArrow.src = '../assets/up-arrow.png';
   upArrow.height = 15;
   upArrow.style.cursor = 'pointer';
   upArrow.style.display = 'none';
@@ -54,7 +54,7 @@ export const createBanner = (onExit) => {
   text.innerHTML = 'Click anywhere to leave a comment or edit design';
 
   const cancel = document.createElement('img');
-  cancel.src = 'src/assets/cancel.svg';
+  cancel.src = '../assets/cancel.svg';
   cancel.height = 12;
   cancel.style.cursor = 'pointer';
   cancel.onclick = onExit;

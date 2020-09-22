@@ -27,7 +27,7 @@ ready.docReady(() => {
     const script = document.createElement('script');
     script.type = 'text/javascript';
     script.async = true;
-    script.src = `https://collabsauce.com/js/kickoff.js?projectKey=UJ2UhsD9NOeOruyD45ptxLXKcSgQHObi`;
+    script.src = `https://staging-collab-widget.netlify.app/js/widget.js?projectKey=UJ2UhsD9NOeOruyD45ptxLXKcSgQHObi`;
     document.head.appendChild(script);
   }
 
@@ -315,11 +315,11 @@ ready.docReady(() => {
     document.getElementById('collab-sauce-iframe').contentWindow.postMessage(JSON.stringify(setParentMessage), iframeSrc);
 
     // tell the iframe the current projectKey
-    const collabScriptSrc = 'https://collabsauce.com/js/kickoff.js';
+    const collabScriptSrc = 'https://staging-collab-widget.netlify.app/js/widget.js';
     const sources = [];
     document.getElementsByTagName('script').forEach(script => sources.push(script.src));
-    const kickOffSrc = sources.find(src => src.indexOf(collabScriptSrc) >= 0);
-    const projectKey = kickOffSrc.slice(kickOffSrc.search('projectKey=') + 'projectKey='.length);
+    const widgetSrc = sources.find(src => src.indexOf(collabScriptSrc) >= 0);
+    const projectKey = widgetSrc.slice(widgetSrc.search('projectKey=') + 'projectKey='.length);
     const projectKeyMessage = { type: 'projectKey', projectKey };
     document.getElementById('collab-sauce-iframe').contentWindow.postMessage(JSON.stringify(projectKeyMessage), iframeSrc);
   };
@@ -332,7 +332,7 @@ ready.docReady(() => {
   sauceButton.id = 'collab-sauce-sauceButton';
   sauceButton.className = 'collab-sauce-sauceButton';
   const sauceButtonImg = document.createElement('img');
-  sauceButtonImg.src = 'src/assets/sauce-bottle.svg';
+  sauceButtonImg.src = '../assets/sauce-bottle.svg';
   sauceButtonImg.className = 'collab-sauce-sauceBottle';
   sauceButton.appendChild(sauceButtonImg);
   document.body.appendChild(sauceButton);
