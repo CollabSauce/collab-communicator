@@ -332,7 +332,7 @@ ready.docReady(() => {
   sauceButton.id = 'collab-sauce-sauceButton';
   sauceButton.className = 'collab-sauce-sauceButton';
   const sauceButtonImg = document.createElement('img');
-  sauceButtonImg.src = 'https://staging-collab-widget.netlify.app/assets/sauce-bottle.svg';
+  sauceButtonImg.src = 'https://staging-collab-widget.netlify.app/public/assets/sauce-bottle.svg';
   sauceButtonImg.className = 'collab-sauce-sauceBottle';
   sauceButton.appendChild(sauceButtonImg);
   document.body.appendChild(sauceButton);
