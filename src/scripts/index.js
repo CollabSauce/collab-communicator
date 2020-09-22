@@ -11,7 +11,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
-const iframeSrc = IS_DEVELOPMENT ? 'http://localhost:3001' : 'https://wizardly-volhard-e87a31.netlify.app';
+const iframeSrc = IS_DEVELOPMENT ? 'http://localhost:3001' : 'https://staging-collab-integration-tool.netlify.app';
 
 ready.docReady(() => {
   // load styles and scripts
