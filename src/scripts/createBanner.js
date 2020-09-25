@@ -1,10 +1,12 @@
+import config from './config';
+
 export const createBanner = (onExit) => {
   const shadowDivHolder = document.createElement('div');
   shadowDivHolder.style.position = 'fixed';
   shadowDivHolder.style.top = '0px';
   shadowDivHolder.style.left = '0px';
   shadowDivHolder.style.right = '0px';
-  shadowDivHolder.zIndex = 2147483600;
+  shadowDivHolder.style.zIndex = 2147483600;
 
   // create the shadow dom within the shadowDivHolder
   const shadowDomBannerContainer = shadowDivHolder.attachShadow({mode: 'open'});
@@ -29,7 +31,7 @@ export const createBanner = (onExit) => {
 
   // Create the elements that will live inside the shadowDom
   const downArrow = document.createElement('img');
-  downArrow.src = 'https://staging-collab-widget.netlify.app/public/assets/down-arrow.png';
+  downArrow.src = `${config.currentHost}/public/assets/down-arrow.png`;
   downArrow.height = 15;
   downArrow.style.cursor = 'pointer';
   downArrow.onclick = () => {
@@ -40,7 +42,7 @@ export const createBanner = (onExit) => {
   };
 
   const upArrow = document.createElement('img');
-  upArrow.src = 'https://staging-collab-widget.netlify.app/public/assets/up-arrow.png';
+  upArrow.src = `${config.currentHost}/public/assets/up-arrow.png`;
   upArrow.height = 15;
   upArrow.style.cursor = 'pointer';
   upArrow.style.display = 'none';
@@ -55,7 +57,7 @@ export const createBanner = (onExit) => {
   text.innerHTML = 'Click anywhere to leave a comment or edit design';
 
   const cancel = document.createElement('img');
-  cancel.src = 'https://staging-collab-widget.netlify.app/public/assets/cancel.svg';
+  cancel.src = `${config.currentHost}/public/assets/cancel.svg`;
   cancel.height = 12;
   cancel.style.cursor = 'pointer';
   cancel.onclick = onExit;

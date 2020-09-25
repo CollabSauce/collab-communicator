@@ -14,7 +14,11 @@ module.exports = merge(common, {
     widget: Path.resolve(__dirname, '../src/scripts/widget.js'),
   },
   output: {
-    filename: 'js/[name].[chunkhash:8].js',
+    filename: (pathData, assetInfo) => {
+      // add a unique hash to app.js (or any other file we are outputting).
+      // Dont ever add a hash to widget.js, as that is the url for the script tag.
+      return pathData.chunk.name === 'widget' ? 'js/[name].js' : 'js/[name].[chunkhash:8].js';
+    },
     chunkFilename: 'js/[name].[chunkhash:8].chunk.js',
   },
   plugins: [

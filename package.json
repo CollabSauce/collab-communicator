@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "description": "Communicator between collab-integration-tool and client-website",
   "scripts": {
-    "build": "cross-env NODE_ENV=production webpack --config webpack/webpack.config.prod.js --colors",
-    "start": "webpack-dev-server --open --config webpack/webpack.config.dev.js",
-    "deploy": "netlify deploy --prod"
+    "build-production": "cross-env NODE_ENV=production ENV=production webpack --config webpack/webpack.config.prod.js --colors",
+    "build-staging": "ENV=staging node ./build_scripts/build.js",
+    "start": "ENV=development PROJECT_KEY=UJ2UhsD9NOeOruyD45ptxLXKcSgQHObi webpack-dev-server --open --config webpack/webpack.config.dev.js",
+    "deploy-production": "netlify TBD THIS SHOULD BREAK RIGHT NOW deploy --prod",
+    "deploy-staging": "netlify deploy --prod --site d4b9e275-c7b9-49ff-a942-a9329d751e15"
   },
   "repository": {
     "type": "git",
@@ -31,6 +33,7 @@
     "@babel/preset-env": "^7.11.0",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.1.0",
+    "chalk": "^4.1.0",
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^6.0.3",
     "cross-env": "^7.0.2",

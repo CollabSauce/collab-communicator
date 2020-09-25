@@ -5,13 +5,18 @@ import { ready } from './docready';
 import { getDomPath } from './getDomPath';
 import { createBanner } from './createBanner';
 import { copyHtml } from './copyHtml';
+import config from './config';
 
 if (process.env.NODE_ENV === 'development') {
   require('../index.html');
 }
 
-const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
-const iframeSrc = IS_DEVELOPMENT ? 'http://localhost:3001' : 'https://staging-collab-integration-tool.netlify.app';
+const {
+  currentHost,
+  develomentProjectKey,
+  iframeSrc,
+  isDevelopment
+} = config;
 
 ready.docReady(() => {
   // load styles and scripts
@@ -22,12 +27,12 @@ ready.docReady(() => {
   iframe.onload = () => { resetAll(); };
   document.body.appendChild(iframe);
 
-  if (IS_DEVELOPMENT) {
+  if (isDevelopment) {
     // manually add a <script> to the header that will mimic production.
     const script = document.createElement('script');
     script.type = 'text/javascript';
     script.async = true;
-    script.src = `https://staging-collab-widget.netlify.app/js/widget.js?projectKey=UJ2UhsD9NOeOruyD45ptxLXKcSgQHObi`;
+    script.src = `${currentHost}/js/widget.js?projectKey=${develomentProjectKey}`;
     document.head.appendChild(script);
   }
 
@@ -200,6 +205,8 @@ ready.docReady(() => {
       const { targetId, targetDomPath, designEdits } = domItemData;
       const element = findElement(targetId, targetDomPath);
 
+      if (!element) { return; }
+
       // return the element's cssText so we can re-apply it later
       const originalDomItemCssText = element.style.cssText;
       const returnMessage = { type: 'selectedDomItemCssText', originalDomItemCssText };
@@ -215,6 +222,8 @@ ready.docReady(() => {
       const { targetId, targetDomPath, originalCssText } = domItemData;
       const element = findElement(targetId, targetDomPath);
 
+      if (!element) { return; }
+
       // scroll element into view, unhighlight element, unapply design changes
       element.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center'});
       element.classList.remove('CollabSauce__outline__Non-Edit_Mode');
@@ -225,6 +234,8 @@ ready.docReady(() => {
       const { targetId, targetDomPath } = domItemData;
       const element = findElement(targetId, targetDomPath);
 
+      if (!element) { return; }
+
       element.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center'});
       element.classList.add('CollabSauce__outline__Non-Edit_Mode');
     },
@@ -233,6 +244,8 @@ ready.docReady(() => {
       const { targetId, targetDomPath, originalCssText } = domItemData;
       const element = findElement(targetId, targetDomPath);
 
+      if (!element) { return; }
+
       // unapply design changes
       element.style.cssText = originalCssText;
     },
@@ -240,6 +253,8 @@ ready.docReady(() => {
       // Similar to restoreDesignChange, but doesn't undo any design changes, just unselects the element. Used in TaskDetail view.
       const { targetId, targetDomPath } = domItemData;
       const element = findElement(targetId, targetDomPath);
+
+      if (!element) { return; }
 
       // unhighlight element
       element.classList.remove('CollabSauce__outline__Non-Edit_Mode');
@@ -315,7 +330,7 @@ ready.docReady(() => {
     document.getElementById('collab-sauce-iframe').contentWindow.postMessage(JSON.stringify(setParentMessage), iframeSrc);
 
     // tell the iframe the current projectKey
-    const collabScriptSrc = 'https://staging-collab-widget.netlify.app/js/widget.js';
+    const collabScriptSrc = `${currentHost}/js/widget.js`;
     const sources = [];
     document.getElementsByTagName('script').forEach(script => sources.push(script.src));
     const widgetSrc = sources.find(src => src.indexOf(collabScriptSrc) >= 0);
@@ -332,7 +347,7 @@ ready.docReady(() => {
   sauceButton.id = 'collab-sauce-sauceButton';
   sauceButton.className = 'collab-sauce-sauceButton';
   const sauceButtonImg = document.createElement('img');
-  sauceButtonImg.src = 'https://staging-collab-widget.netlify.app/public/assets/sauce-bottle.svg';
+  sauceButtonImg.src = `${currentHost}/public/assets/sauce-bottle.svg`;
   sauceButtonImg.className = 'collab-sauce-sauceBottle';
   sauceButton.appendChild(sauceButtonImg);
   document.body.appendChild(sauceButton);
