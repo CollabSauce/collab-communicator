@@ -32,7 +32,7 @@ ready.docReady(() => {
     const script = document.createElement('script');
     script.type = 'text/javascript';
     script.async = true;
-    script.src = `${currentHost}/js/widget.js?projectKey=${develomentProjectKey}`;
+    script.src = `${currentHost}?projectKey=${develomentProjectKey}`;
     document.head.appendChild(script);
   }
 
@@ -330,10 +330,10 @@ ready.docReady(() => {
     document.getElementById('collab-sauce-iframe').contentWindow.postMessage(JSON.stringify(setParentMessage), iframeSrc);
 
     // tell the iframe the current projectKey
-    const collabScriptSrc = `${currentHost}.js`;
+    const collabScriptSrc = `${currentHost}?projectKey=`;
     const sources = [];
     document.getElementsByTagName('script').forEach(script => sources.push(script.src));
-    const widgetSrc = sources.find(src => src === collabScriptSrc);
+    const widgetSrc = sources.find(src => collabScriptSrc.startsWith(collabScriptSrc));
     const projectKey = widgetSrc.slice(widgetSrc.search('projectKey=') + 'projectKey='.length);
     const projectKeyMessage = { type: 'projectKey', projectKey };
     document.getElementById('collab-sauce-iframe').contentWindow.postMessage(JSON.stringify(projectKeyMessage), iframeSrc);
