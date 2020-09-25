@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Communicator between collab-integration-tool and client-website",
   "scripts": {
-    "build-production": "cross-env NODE_ENV=production ENV=production webpack --config webpack/webpack.config.prod.js --colors",
+    "build-production": "ENV=production node ./build_scripts/build.js",
     "build-staging": "ENV=staging node ./build_scripts/build.js",
     "start": "ENV=development PROJECT_KEY=UJ2UhsD9NOeOruyD45ptxLXKcSgQHObi webpack-dev-server --open --config webpack/webpack.config.dev.js",
     "deploy-production": "netlify TBD THIS SHOULD BREAK RIGHT NOW deploy --prod",

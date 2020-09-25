@@ -8,19 +8,28 @@ A lightweight foundation for your next webpack based frontend project.
 ### Installation
 
 ```
-npm install
+nvm use
+yarn install
 ```
 
 ### Start Dev Server
 
 ```
-npm start
+yarn start
 ```
 
-### Build Prod Version
+### Deploying and Building
 
+##### Staging
 ```
-npm run build
+yarn build-staging
+yarn deploy-staging
+```
+
+##### Production
+```
+yarn build-production
+yarn deploy-production
 ```
 
 ### Features:
@@ -30,15 +39,3 @@ npm run build
 * Linting via [eslint-loader](https://github.com/MoOx/eslint-loader)
 
 When you run `npm run build` we use the [mini-css-extract-plugin](https://github.com/webpack-contrib/mini-css-extract-plugin) to move the css to a separate file. The css file gets included in the head of the `index.html`.
-
-
-### Deploying
-
-THIS IS HACKY (VERY VERY HACKY):
-* `yarn build`
-* Go to the index.html file, copy the unique `app.[HASH].js` and `chunk.[].js` files, and paste it into to the appropriate spots in widget.js
-* run `yarn build` again. Make sure the hashes in the above files didn't change. Only widget.js should change.
-* go to `build/js` and change `widget.[HASH].js` to `widget.js`. I.e. remove the hash.
-* go to `build/js` and change `widget.[HASH].js.map to `widget.js.map`. I.e. remove the hash.
-* go to `build/js/widget.js` and change the sourceMap url from `widget.[HASH].js.map` to `widget.js.map`.
-* `yarn deploy`
