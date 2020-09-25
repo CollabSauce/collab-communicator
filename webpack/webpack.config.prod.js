@@ -26,7 +26,7 @@ module.exports = merge(common, {
       'process.env.NODE_ENV': JSON.stringify('production'),
       'process.env.ENV': JSON.stringify(process.env.ENV),
       'process.env.APP_HASH': JSON.stringify(process.env.APP_HASH),
-      'process.env.CHUNK_HASHES': JSON.stringify(process.env.CHUNK_HASHES)
+      'process.env.CHUNK_HASH': JSON.stringify(process.env.CHUNK_HASH)
     }),
     new Webpack.optimize.ModuleConcatenationPlugin(),
     new MiniCssExtractPlugin({
