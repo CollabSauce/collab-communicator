@@ -330,10 +330,10 @@ ready.docReady(() => {
     document.getElementById('collab-sauce-iframe').contentWindow.postMessage(JSON.stringify(setParentMessage), iframeSrc);
 
     // tell the iframe the current projectKey
-    const collabScriptSrc = `${currentHost}/js/widget.js`;
+    const collabScriptSrc = `${currentHost}.js`;
     const sources = [];
     document.getElementsByTagName('script').forEach(script => sources.push(script.src));
-    const widgetSrc = sources.find(src => src.indexOf(collabScriptSrc) >= 0);
+    const widgetSrc = sources.find(src => src === collabScriptSrc);
     const projectKey = widgetSrc.slice(widgetSrc.search('projectKey=') + 'projectKey='.length);
     const projectKeyMessage = { type: 'projectKey', projectKey };
     document.getElementById('collab-sauce-iframe').contentWindow.postMessage(JSON.stringify(projectKeyMessage), iframeSrc);

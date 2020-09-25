@@ -6,3 +6,9 @@
   # root directory if a base has not been set. This sample publishes the
   # directory located at the absolute path "root/project/build-output"
   publish = "./build"
+
+[[redirects]]
+  from = "/"
+  to = "/js/widget.js"
+  status = 200
+  force = true
