@@ -13,7 +13,7 @@ if (process.env.NODE_ENV === 'development') {
 
 const {
   currentHost,
-  develomentProjectKey,
+  developmentProjectKey,
   iframeSrc,
   isDevelopment
 } = config;
@@ -32,7 +32,7 @@ ready.docReady(() => {
     const script = document.createElement('script');
     script.type = 'text/javascript';
     script.async = true;
-    script.src = `${currentHost}?projectKey=${develomentProjectKey}`;
+    script.src = `${currentHost}?projectKey=${developmentProjectKey}`;
     document.head.appendChild(script);
   }
 
@@ -181,12 +181,19 @@ ready.docReady(() => {
       }
     },
     getInfoForCreateTask: () => {
-      const html = copyHtml();
-      const width = window.innerWidth;
-      const height = window.innerHeight;
-      const url_origin = window.location.origin;
-      const message = { type: 'createTaskWithInfo', html, width, height, url_origin };
-      document.getElementById('collab-sauce-iframe').contentWindow.postMessage(JSON.stringify(message), iframeSrc);
+      if (!currentClickTarget.parentElement || !currentClickTarget.parentNode) {
+        // if the element was removed, don't create a task. tell the iframe about it.
+        // NOTE: I think `parentElement` and `parentNode` - checking for either just incase
+        const message = { type: 'createTaskFailNoElement' };
+        document.getElementById('collab-sauce-iframe').contentWindow.postMessage(JSON.stringify(message), iframeSrc);
+      } else {
+        const html = copyHtml();
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        const url_origin = window.location.origin;
+        const message = { type: 'createTaskWithInfo', html, width, height, url_origin };
+        document.getElementById('collab-sauce-iframe').contentWindow.postMessage(JSON.stringify(message), iframeSrc);
+      }
     },
     exitTaskCreationMode: () => {
       removeElementSelections();
