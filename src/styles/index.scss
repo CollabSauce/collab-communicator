@@ -70,31 +70,31 @@
   cursor: pointer;
   right: 30px;
   top: 70px;
-  height: 50px;
-  width: 50px;
+  height: 60px;
+  width: 60px;
   outline: none;
-  background-color: #5955E9;
+  background-color: #548DE6;
   border: none;
-  border-radius:25px;
+  border-radius: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
 
-  -webkit-box-shadow: 1px 3px 9px 0px rgba(173,173,173,1);
-  -moz-box-shadow: 1px 3px 9px 0px rgba(173,173,173,1);
-  box-shadow: 1px 3px 9px 0px rgba(173,173,173,1);
+  // -webkit-box-shadow: 1px 3px 9px 0px rgba(173,173,173,1);
+  // -moz-box-shadow: 1px 3px 9px 0px rgba(173,173,173,1);
+  // box-shadow: 1px 3px 9px 0px rgba(173,173,173,1);
 }
 
 .collab-sauce-sauceButton:hover{
-  background-color: #4340c7;
+  background-color: #517EC5;
 }
 
 .collab-sauce-sauceButton:active {
-  background-color: #3a38ab;
+  background-color: #476DA9;
 }
 
 .collab-sauce-sauceBottle {
-  width: 12px;
+  width: 15px;
 }
 
 .collab-sauce-hidden {
