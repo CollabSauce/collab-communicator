@@ -190,7 +190,7 @@ ready.docReady(() => {
         const html = copyHtml();
         const width = window.innerWidth;
         const height = window.innerHeight;
-        const url_origin = window.location.origin;
+        const url_origin = window.location.href;
         const message = { type: 'createTaskWithInfo', html, width, height, url_origin };
         document.getElementById('collab-sauce-iframe').contentWindow.postMessage(JSON.stringify(message), iframeSrc);
       }
