@@ -332,6 +332,14 @@ ready.docReady(() => {
     exitSelectionMode();
     messageRouting.hideToolbar();
 
+    // wait a few seconds to send a message to the iframe, as `iframe.onload` will fire in
+    // chrome when the react app is ready, but on safari the react-app may not be ready
+    // to receive messages, which causes errors if it can't receive messages.
+    setTimeout(sendMessageToIframeOnInit, 2500);
+    setTimeout(showSauceButton, 2500);
+  };
+
+  const sendMessageToIframeOnInit = () => {
     // tell the iframe to set the parent origin
     const setParentMessage = { type: 'setParentOrigin' };
     document.getElementById('collab-sauce-iframe').contentWindow.postMessage(JSON.stringify(setParentMessage), iframeSrc);
@@ -346,13 +354,17 @@ ready.docReady(() => {
     document.getElementById('collab-sauce-iframe').contentWindow.postMessage(JSON.stringify(projectKeyMessage), iframeSrc);
   };
 
+  const showSauceButton = () => {
+    document.getElementById('collab-sauce-sauceButton').classList.remove('collab-sauce-force-hidden');
+  };
+
   // listen on all messages from iframe
   window.addEventListener('message', receiveMessage);
 
   // create the sauceButton
   const sauceButton = document.createElement('div');
   sauceButton.id = 'collab-sauce-sauceButton';
-  sauceButton.className = 'collab-sauce-sauceButton';
+  sauceButton.className = 'collab-sauce-sauceButton collab-sauce-force-hidden'; // hide by default, will show when `resetAll` is called
   const sauceButtonImg = document.createElement('img');
   sauceButtonImg.src = `${currentHost}/public/assets/sauce-bottle.svg`;
   sauceButtonImg.className = 'collab-sauce-sauceBottle';
