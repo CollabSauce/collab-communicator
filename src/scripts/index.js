@@ -346,9 +346,13 @@ ready.docReady(() => {
 
     // tell the iframe the current projectKey
     const collabScriptSrc = `${currentHost}?projectKey=`;
+    const collabScriptSrcWithSlash = `${currentHost}/?projectKey=`;
     const sources = [];
     document.getElementsByTagName('script').forEach(script => sources.push(script.src));
-    const widgetSrc = sources.find(src => collabScriptSrc.startsWith(collabScriptSrc));
+    const widgetSrc = sources.find(src => {
+      const scriptSrc = src || '';
+      return scriptSrc.startsWith(collabScriptSrc) || scriptSrc.startsWith(collabScriptSrcWithSlash)
+    });
     const projectKey = widgetSrc.slice(widgetSrc.search('projectKey=') + 'projectKey='.length);
     const projectKeyMessage = { type: 'projectKey', projectKey };
     document.getElementById('collab-sauce-iframe').contentWindow.postMessage(JSON.stringify(projectKeyMessage), iframeSrc);
