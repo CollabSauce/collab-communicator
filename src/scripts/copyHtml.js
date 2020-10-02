@@ -5,6 +5,7 @@ export const copyHtml = () => {
   let node = document.doctype;
   try {
     setCustomStyles();
+    setCustomImgs();
   } catch (err) {
     // do nothing
   }
@@ -85,6 +86,15 @@ const setCustomStyles = () => {
     });
     if (customStyles) {
       $('<style class="collab-special-styles">').html(customStyles).insertAfter(stylesheet.ownerNode);
+    }
+  });
+};
+
+const setCustomImgs = () => {
+  document.querySelectorAll('img').forEach((img) => {
+    if (img.getAttribute('src') !== img.currentSrc) {
+      // accounts for relative paths, and different sources
+      img.setAttribute('collabsauce-src', img.currentSrc);
     }
   });
 };
