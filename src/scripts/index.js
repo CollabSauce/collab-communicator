@@ -351,7 +351,7 @@ ready.docReady(() => {
     document.getElementsByTagName('script').forEach(script => sources.push(script.src));
     const widgetSrc = sources.find(src => {
       const scriptSrc = src || '';
-      return scriptSrc.startsWith(collabScriptSrc) || scriptSrc.startsWith(collabScriptSrcWithSlash)
+      return scriptSrc.startsWith(collabScriptSrc) || scriptSrc.startsWith(collabScriptSrcWithSlash);
     });
     const projectKey = widgetSrc.slice(widgetSrc.search('projectKey=') + 'projectKey='.length);
     const projectKeyMessage = { type: 'projectKey', projectKey };
