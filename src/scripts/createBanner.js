@@ -31,7 +31,7 @@ export const createBanner = (onExit) => {
 
   // Create the elements that will live inside the shadowDom
   const downArrow = document.createElement('img');
-  downArrow.src = `${config.currentHost}/public/assets/down-arrow.png`;
+  downArrow.src = `${config.currentHost}/public/assets/window-arrow.svg`;
   downArrow.height = 15;
   downArrow.style.cursor = 'pointer';
   downArrow.onclick = () => {
@@ -42,10 +42,11 @@ export const createBanner = (onExit) => {
   };
 
   const upArrow = document.createElement('img');
-  upArrow.src = `${config.currentHost}/public/assets/up-arrow.png`;
+  upArrow.src = `${config.currentHost}/public/assets/window-arrow.svg`;
   upArrow.height = 15;
   upArrow.style.cursor = 'pointer';
   upArrow.style.display = 'none';
+  upArrow.style.transform = 'rotate(180deg)';
   upArrow.onclick = () => {
     downArrow.style.display = 'block';
     upArrow.style.display = 'none';
