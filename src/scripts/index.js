@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import queryString from 'query-string';
 
 import '../styles/index.scss';
 import { ready } from './docready';
@@ -356,6 +357,27 @@ ready.docReady(() => {
     const projectKey = widgetSrc.slice(widgetSrc.search('projectKey=') + 'projectKey='.length);
     const projectKeyMessage = { type: 'projectKey', projectKey };
     document.getElementById('collab-sauce-iframe').contentWindow.postMessage(JSON.stringify(projectKeyMessage), iframeSrc);
+
+    // scroll to element if the query-params dictate it and the element exists
+    const qps = queryString.parse(window.location.search);
+    let qpElement = null;
+    if (qps.collabsauce_target_id) {
+      qpElement = document.querySelector('#' + qps.collabsauce_target_id);
+    } else if (qps.collabsauce_target_selector) {
+      qpElement = document.querySelector(qps.collabsauce_target_selector);
+    }
+    if (qpElement) {
+      qpElement.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center'});
+
+      qpElement.classList.add('CollabSauce__outline__From-External-Link-transition-helper');
+      qpElement.classList.add('CollabSauce__outline__From-External-Link');
+      setTimeout(() => {
+        qpElement.classList.remove('CollabSauce__outline__From-External-Link');
+      }, 2500);
+      setTimeout(() => {
+        qpElement.classList.remove('CollabSauce__outline__From-External-Link-transition-helper');
+      }, 5000);
+    }
   };
 
   const showSauceButton = () => {

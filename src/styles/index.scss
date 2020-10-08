@@ -10,6 +10,25 @@
   outline: 2px solid #61AAF8 !important;
 }
 
+.CollabSauce__outline__From-External-Link-transition-helper {
+  transition: outline 2s ease-in-out !important;
+  -webkit-animation: outline 2s ease-in-out !important;
+  -moz-animation: outline 2s ease-in-out !important;
+  -o-animation: outline 2s ease-in-out !important;
+  -ms-animation: outline 2s ease-in-out !important;
+
+  transition: background-color 2s ease-in-out !important;
+  -webkit-animation: background-color 2s ease-in-out !important;
+  -moz-animation: background-color 2s ease-in-out !important;
+  -o-animation: background-color 2s ease-in-out !important;
+  -ms-animation: background-color 2s ease-in-out !important;
+}
+
+.CollabSauce__outline__From-External-Link {
+  outline: 2px solid #FF9800 !important;
+  background-color: yellow !important;
+}
+
 .CollabSauce__crosshair__ {
   cursor: crosshair;
 
