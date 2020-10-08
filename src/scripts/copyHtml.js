@@ -12,6 +12,8 @@ export const copyHtml = () => {
   if (node) {
     docType = `<!DOCTYPE ${node.name}>`;
   }
+  var iframeData = '';
+  var iframeCount = 0;
   $('body *').each(function() {
     const element = $(this);
     const tagName = element.prop('tagName').toLowerCase();
@@ -40,7 +42,26 @@ export const copyHtml = () => {
     } else if (tagName === 'base') {
       element.attr('href', element.get(0).href);
     }
-    // TODO: Handle Iframe??/
+    if (tagName === 'iframe') {
+      try {
+        const iframeWindow = element.get(0).contentWindow;
+        const iframeDoc = iframeWindow.document;
+        if (iframeDoc) {
+          const iframeNode = iframeDoc.doctype;
+          const iframeDocType = `<!DOCTYPE ${iframeNode.name}>`;
+          let iframeBaseUrl = element.attr('src');
+          if (typeof URL == 'function') {
+             iframeBaseUrl = new URL(element.attr('src'), window.location.href).href;
+          }
+          let iframeContent = doctype + iframeDoc.documentElement.outerHTML;
+          const baseTag = `<base href="${iframeBaseUrl}" target="_blank">`;
+          iframeContent = iframeContent.replace(/<head>/i, `<head>${baseTag}`);
+          element.attr("collabsauceIframeCount", iframeCount);
+          iframeData += `<span style="display:none;" class="collabsauce_iframedata_${iframeCount}">${encodeIt(iframeContent)}</span>`;
+          iframeCount++;
+        }
+      } catch (e) {}
+    }
   });
   if ($(document).scrollTop() > 0) {
     $('body').attr('data-collab-top', $(document).scrollTop());
@@ -49,6 +70,10 @@ export const copyHtml = () => {
     $('body').attr('data-collab-left', $(document).scrollLeft());
   }
   let docHtml = `${docType}\r\n ${document.documentElement.outerHTML}`;
+  if (iframeData) {
+    docHtml = docHtml.replace(/collabsauceIframeCount/g, 'scrolling="no" collabsauceIframeCount');
+  }
+  $('[collabsauceIframeCount]').removeAttr('collabsauceIframeCount');
   $('[data-collab-left]').removeAttr('data-collab-left');
   $('[data-collab-top]').removeAttr('data-collab-top');
   $('[data-collab-manual-height]').removeAttr('data-collab-manual-height');
@@ -57,7 +82,7 @@ export const copyHtml = () => {
   $('style.collab-special-styles').remove();
   const canvasData = createCanvasElements();
   const videoData = createVideoElements();
-  docHtml = docHtml.replace(/<\/body><\/html>$/i, `${canvasData}${videoData}</body></html>`);
+  docHtml = docHtml.replace(/<\/body><\/html>$/i, `${canvasData}${videoData}${iframeData}</body></html>`);
   return docHtml;
 };
 
@@ -121,3 +146,14 @@ const createVideoElements = () => {
   });
   return videoData;
 };
+
+const encodeIt = (str) => {
+  str = replaceIt(str);
+  return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (match, p1) => {
+    return String.fromCharCode("0x" + p1)
+  }));
+};
+
+const replaceIt = (str) => {
+  return str.replace(/[\uD800-\uDBFF]+([^\uDC00-\uDFFF]|$)/g, "�$1").replace(/(^|[^\uD800-\uDBFF])[\uDC00-\uDFFF]+/g, "$1�")
+}
