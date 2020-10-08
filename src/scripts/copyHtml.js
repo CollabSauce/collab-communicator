@@ -42,27 +42,30 @@ export const copyHtml = () => {
     } else if (tagName === 'base') {
       element.attr('href', element.get(0).href);
     }
-    if (tagName === 'iframe') {
-      try {
-        const iframeWindow = element.get(0).contentWindow;
-        const iframeDoc = iframeWindow.document;
-        if (iframeDoc) {
-          const iframeNode = iframeDoc.doctype;
-          const iframeDocType = `<!DOCTYPE ${iframeNode.name}>`;
-          let iframeBaseUrl = element.attr('src');
-          if (typeof URL == 'function') {
-             iframeBaseUrl = new URL(element.attr('src'), window.location.href).href;
-          }
-          let iframeContent = doctype + iframeDoc.documentElement.outerHTML;
-          const baseTag = `<base href="${iframeBaseUrl}" target="_blank">`;
-          iframeContent = iframeContent.replace(/<head>/i, `<head>${baseTag}`);
-          element.attr("collabsauceIframeCount", iframeCount);
-          iframeData += `<span style="display:none;" class="collabsauce_iframedata_${iframeCount}">${encodeIt(iframeContent)}</span>`;
-          iframeCount++;
-        }
-      } catch (e) {}
-    }
-  });
+    // TODO: GET THIS WORKING
+  //   if (tagName === 'iframe') {
+  //     try {
+  //       const iframeWindow = element.get(0).contentWindow;
+  //       const iframeDoc = iframeWindow.document;
+  //       if (iframeDoc) {
+  //         const iframeNode = iframeDoc.doctype;
+  //         const iframeDocType = `<!DOCTYPE ${iframeNode.name}>`;
+  //         let iframeBaseUrl = element.attr('src');
+  //         if (typeof URL == 'function') {
+  //            iframeBaseUrl = new URL(element.attr('src'), window.location.href).href;
+  //         }
+  //         let iframeContent = doctype + iframeDoc.documentElement.outerHTML;
+  //         const baseTag = `<base href="${iframeBaseUrl}" target="_blank">`;
+  //         iframeContent = iframeContent.replace(/<head>/i, `<head>${baseTag}`);
+  //         element.attr("collabsauceIframeCount", iframeCount);
+  //         iframeData += `<span style="display:none;" class="collabsauce_iframedata_${iframeCount}">${encodeIt(iframeContent)}</span>`;
+  //         iframeCount++;
+  //       }
+  //     } catch (err) {
+  //       // womp womp ??
+  //     }
+  //   }
+  // });
   if ($(document).scrollTop() > 0) {
     $('body').attr('data-collab-top', $(document).scrollTop());
   }
