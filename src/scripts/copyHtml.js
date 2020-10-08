@@ -65,7 +65,7 @@ export const copyHtml = () => {
   //       // womp womp ??
   //     }
   //   }
-  // });
+  });
   if ($(document).scrollTop() > 0) {
     $('body').attr('data-collab-top', $(document).scrollTop());
   }
@@ -153,10 +153,10 @@ const createVideoElements = () => {
 const encodeIt = (str) => {
   str = replaceIt(str);
   return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (match, p1) => {
-    return String.fromCharCode("0x" + p1)
+    return String.fromCharCode("0x" + p1);
   }));
 };
 
 const replaceIt = (str) => {
-  return str.replace(/[\uD800-\uDBFF]+([^\uDC00-\uDFFF]|$)/g, "�$1").replace(/(^|[^\uD800-\uDBFF])[\uDC00-\uDFFF]+/g, "$1�")
-}
+  return str.replace(/[\uD800-\uDBFF]+([^\uDC00-\uDFFF]|$)/g, "�$1").replace(/(^|[^\uD800-\uDBFF])[\uDC00-\uDFFF]+/g, "$1�");
+};
