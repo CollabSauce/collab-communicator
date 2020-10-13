@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import * as Sentry from '@sentry/react';
+import * as Sentry from '@sentry/browser';
 
 export const copyHtml = () => {
   let docType = '';
