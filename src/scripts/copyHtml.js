@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import * as Sentry from '@sentry/react';
 
 export const copyHtml = () => {
   let docType = '';
@@ -7,6 +8,7 @@ export const copyHtml = () => {
     setCustomStyles();
     setCustomImgs();
   } catch (err) {
+    Sentry.captureException(err);
     // do nothing
   }
   if (node) {
@@ -134,6 +136,7 @@ const createCanvasElements = () => {
     try {
       canvasDataUrl = canvas.toDataURL('image/png', 1);
     } catch (err) {
+      Sentry.captureException(err);
       // womp womp ??
     }
     canvasData += `<div style="display:none;" class="collabCanvas${idx}">${canvasDataUrl}</div>`;

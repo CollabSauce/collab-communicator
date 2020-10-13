@@ -6,8 +6,7 @@ const common = require('./webpack.common.js');
 
 module.exports = merge(common, {
   mode: 'production',
-  // devtool: 'source-map',
-  // devtool: 'hidden-source-map',
+  devtool: 'source-map',
   stats: 'errors-only',
   bail: true,
   entry: {
@@ -27,7 +26,8 @@ module.exports = merge(common, {
       'process.env.NODE_ENV': JSON.stringify('production'),
       'process.env.ENV': JSON.stringify(process.env.ENV),
       'process.env.APP_HASH': JSON.stringify(process.env.APP_HASH),
-      'process.env.CHUNK_HASH': JSON.stringify(process.env.CHUNK_HASH)
+      'process.env.CHUNK_HASH': JSON.stringify(process.env.CHUNK_HASH),
+      'process.env.SENTRY_RELEASE': JSON.stringify(process.env.SENTRY_RELEASE),
     }),
     new Webpack.optimize.ModuleConcatenationPlugin(),
     new MiniCssExtractPlugin({

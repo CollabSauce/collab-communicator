@@ -1,5 +1,7 @@
 import $ from 'jquery';
 import queryString from 'query-string';
+import * as Sentry from "@sentry/browser";
+import { Integrations } from "@sentry/tracing";
 
 import '../styles/index.scss';
 import { ready } from './docready';
@@ -10,6 +12,19 @@ import config from './config';
 
 if (process.env.NODE_ENV === 'development') {
   require('../index.html');
+} else {
+  Sentry.init({
+    dsn: 'https://55cc4cd140d6445493757874c03d7b39@o460199.ingest.sentry.io/5461589',
+    release: process.env.SENTRY_RELEASE,
+    environment: process.env.ENV,
+    integrations: [new Integrations.BrowserTracing()],
+
+    // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
+    // Sentry recommends adjusting this value in production, or using tracesSampler
+    // for finer control
+    tracesSampleRate: process.env.ENV === 'production' ? 1.0 : 0,
+
+  });
 }
 
 const {
@@ -118,6 +133,7 @@ ready.docReady(() => {
       const message = JSON.parse(e.data);
       messageRouting[message.type] && messageRouting[message.type](message);
     } catch (err) {
+      Sentry.captureException(err);
       return;
     }
   };
@@ -282,8 +298,8 @@ ready.docReady(() => {
     try {
       // putting this in try block because this will fail when ths method is called on initial load.
       document.body.removeChild(shadowDivHolder);
-    } catch (e) {
-
+    } catch (err) {
+      Sentry.captureException(err);
     }
     document.getElementById('collab-sauce-iframe').classList.remove('collab-sauce-hidden');
     removeElementSelections();
