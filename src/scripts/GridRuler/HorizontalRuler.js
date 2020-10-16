@@ -1,18 +1,24 @@
 import { EventEmitter } from 'events';
 
+import { Data } from './Data';
 import { HorizontalRulerTick } from './HorizontalRulerTick';
 import { HorizontalGrid } from './HorizontalGrid';
-import { Data } from './Data';
 
 export const HorizontalRuler = ({ makeGridlineVisible }) => {
-  let rulerMouseDown = false, rulerMouseEntered = false, creatingGrid = false;
+  let rulerMouseDown = false, rulerMouseEntered = false;
 
-  // create the tick=marks
+  // create the tick-marks
   const ticks = generateHorizontalRulerTicks(1000);
 
   // create the div that holds the tick-marks (aka the Horizontal Ruler)
   const div = document.createElement('div');
   div.className = 'collabsauce-tick-ruler collabsauce-horizontal-tick-ruler';
+
+  // if the user dragged the gridline to the top of the page, remove the gridline
+  const onGridlineDragStop = (draggingElement) => {
+    if (!rulerMouseEntered) { return; }
+    draggingElement.remove();
+  };
 
   // add event-listeners to Horizontal Ruler
   div.addEventListener('mousedown', (e) => {
@@ -27,9 +33,7 @@ export const HorizontalRuler = ({ makeGridlineVisible }) => {
   });
   div.addEventListener('mouseleave', (e) => {
     if (rulerMouseDown) {
-      const grid = addGrid(e);
-      const newGridId = grid.data.id;
-      const horizontalGrid = HorizontalGrid({ onStop });
+      const horizontalGrid = HorizontalGrid({ onGridlineDragStop });
       makeGridlineVisible(horizontalGrid);
     }
     rulerMouseEntered = false;
@@ -68,17 +72,3 @@ const generateHorizontalRulerTicks = (max) => {
 
   return ticks;
 };
-
-
-function addGrid(e) {
-  const id = 'collabsauce-horizontal-grid-' + Date.now();
-  const grid =  new EventEmitter();
-  grid.data = {
-    id: id,
-    top: e.pageY
-  };
-
-  Data.horizontalGrids[id] = grid;
-
-  return grid;
-}
