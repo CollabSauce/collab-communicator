@@ -284,7 +284,9 @@ ready.docReady(() => {
       // unhighlight element
       element.classList.remove('CollabSauce__outline__Non-Edit_Mode');
     },
-
+    toggleGridlines: ({ showGridlines }) => {
+      GridRuler(showGridlines);
+    }
   };
 
   const findElement = (targetId, targetDomPath) => {
@@ -419,6 +421,4 @@ ready.docReady(() => {
     sauceButton.classList.add('collab-sauce-hidden');
     iframe.classList.remove('collab-sauce-hidden');
   });
-
-  GridRuler();
 });
