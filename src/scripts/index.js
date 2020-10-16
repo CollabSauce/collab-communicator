@@ -8,6 +8,7 @@ import { ready } from './docready';
 import { getDomPath } from './getDomPath';
 import { createBanner } from './createBanner';
 import { copyHtml } from './copyHtml';
+import { GridRuler } from './GridRuler/GridRuler';
 import config from './config';
 
 if (process.env.NODE_ENV === 'development') {
@@ -418,4 +419,6 @@ ready.docReady(() => {
     sauceButton.classList.add('collab-sauce-hidden');
     iframe.classList.remove('collab-sauce-hidden');
   });
+
+  GridRuler();
 });

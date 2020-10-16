@@ -1,0 +1,85 @@
+$ruler-thickness: 15px; /* This should match what is in HorizontalRuler.js `rulerThickness` variable. */
+$ruler-background-color: white;
+$ruler-stroke-color: black;
+
+$grid-padding: 8px;
+$grid-thickness: 1px;
+$grid-background-color: '#22F5F5';
+
+$tape-background-color: '#22F5F5';
+
+$z-index: 999999999;
+
+
+.collabsauce-tick-ruler {
+  box-sizing: border-box;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  z-index: $z-index + 3;
+  box-shadow: rgba(211,211,211,0.5) 0px 0px 5px 2px;
+  overflow: hidden;
+  background-color: $ruler-background-color;
+  border-color: $ruler-stroke-color;
+
+  &.collabsauce-horizontal-tick-ruler {
+    width: 100%;
+    height: $ruler-thickness;
+    border-bottom: 1px solid;
+  }
+
+  &.collabsauce-vertical-tick-ruler {
+    width: $ruler-thickness;
+    height: 100%;
+    border-right: 1px solid;
+  }
+}
+
+.collabsauce-ruler-top-corner {
+  box-sizing: border-box;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: $ruler-thickness;
+  height: $ruler-thickness;
+  border-right: 1px solid $ruler-stroke-color;
+  border-bottom: 1px solid $ruler-stroke-color;
+  background-color: $ruler-background-color;
+  z-index: $z-index + 3;
+}
+
+.collabsauce-ruler-tick-mark {
+  position: absolute;
+  background-color: $ruler-stroke-color;
+
+  &.collabsauce-horizontal-tick-mark {
+    width: 1px;
+    height: $ruler-thickness;
+  }
+
+  &.collabsauce-vertical-tick-mark {
+    height: 1px;
+    width: $ruler-thickness;
+  }
+}
+
+
+.collabsauce-horizontal-grid-outer {
+  position: absolute;
+  min-width: 100%;
+  // width: Utils.getPageDimension().width, FIXXX REMOVE???
+  height: $grid-padding * 2 + $grid-thickness;
+  left: 0px;
+  // top: this.state.top - Config.gridPadding, FIXXX
+  cursor: row-resize;
+  z-index: $z-index;
+}
+
+.collabsauce-horizontal-grid-inner {
+  position: absolute;
+  top: $grid-padding;
+  left: 0px;
+  width: 100%;
+  height: $grid-thickness;
+  background-color: $grid-background-color;
+}
