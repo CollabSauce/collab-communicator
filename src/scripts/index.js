@@ -131,9 +131,9 @@ ready.docReady(() => {
 
   const receiveMessage = (e) => {
     try {
-      Sentry.captureBreadcrumb({
-        message: 'recievedMessage',
-        data: e.data
+      Sentry.addBreadcrumb({
+        category: 'recievedMessage',
+        message: e.data
       });
       const message = JSON.parse(e.data);
       messageRouting[message.type] && messageRouting[message.type](message);
