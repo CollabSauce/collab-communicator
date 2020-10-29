@@ -131,7 +131,7 @@ const setCustomImgs = () => {
 
 const createCanvasElements = () => {
   let canvasData = '';
-  document.getElementsByTagName('canvas').forEach((canvas, idxx) => {
+  document.getElementsByTagName('canvas').forEach((canvas, idx) => {
     let canvasDataUrl = '';
     try {
       canvasDataUrl = canvas.toDataURL('image/png', 1);
