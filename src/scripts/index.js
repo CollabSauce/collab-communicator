@@ -93,6 +93,8 @@ ready.docReady(() => {
     const targetStyling = getComputedStyle(currentClickTarget);
     const updatedWidthObj = fixBorderWidth(targetStyling, currentClickTarget);
     const targetStyle = { ...targetStyling, ...updatedWidthObj };
+    const targetInnerHTML = currentClickTarget.innerHTML;
+    const targetInnerText = currentClickTarget.innerText;
     const targetDomPath = getDomPath(currentClickTarget);
     const targetInElementStyling = {};
     currentClickTarget.style.forEach(key => {
@@ -106,7 +108,9 @@ ready.docReady(() => {
       targetDomPath,
       targetCssText,
       targetInElementStyling,
-      targetId
+      targetId,
+      targetInnerHTML,
+      targetInnerText,
     };
     document.getElementById('collab-sauce-iframe').contentWindow.postMessage(JSON.stringify(message), iframeSrc);
   };
@@ -248,15 +252,19 @@ ready.docReady(() => {
     },
     restoreDesignChange: ({ domItemData }) => {
       // Used in TasksSummary view.
-      const { targetId, targetDomPath, originalCssText } = domItemData;
+      const { targetId, targetDomPath, originalCssText, textCopyChangesStillApplied } = domItemData;
       const element = findElement(targetId, targetDomPath);
 
       if (!element) { return; }
 
-      // scroll element into view, unhighlight element, unapply design changes
+      // scroll element into view and unapply design change
       element.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center'});
-      element.classList.remove('CollabSauce__outline__Non-Edit_Mode');
       element.style.cssText = originalCssText;
+
+      // unhighlight element if text changes aren't applied
+      if (!textCopyChangesStillApplied) {
+        element.classList.remove('CollabSauce__outline__Non-Edit_Mode');
+      }
     },
     selectTaskOnDom: ({ domItemData }) => {
       // Similar to viewDesignChange, but doesn't apply any changes. Used in TaskDetail view.
@@ -290,7 +298,58 @@ ready.docReady(() => {
     },
     toggleGridlines: ({ showGridlines }) => {
       GridRuler(showGridlines);
-    }
+    },
+    setTextCopy: ({ innerText }) => {
+      currentClickTarget.innerText = innerText;
+    },
+    restoreTextCopyEditChanges: ({ originalTextHtml }) => {
+      currentClickTarget.innerHTML = originalTextHtml;
+    },
+
+    viewTextCopyChange: ({ domItemData }) => {
+      // Used in TasksSummary view.
+      const { targetId, targetDomPath, textCopyChanges } = domItemData;
+      const element = findElement(targetId, targetDomPath);
+
+      if (!element) { return; }
+
+      // return the element's innerHtml so we can re-apply it later
+      const originalDomItemInnerHtml = element.innerHTML;
+      const returnMessage = { type: 'selectedDomItemInnerHtml', originalDomItemInnerHtml };
+      document.getElementById('collab-sauce-iframe').contentWindow.postMessage(JSON.stringify(returnMessage), iframeSrc);
+
+      // scroll element into view, highlight element, apply design changes
+      element.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center'});
+      element.classList.add('CollabSauce__outline__Non-Edit_Mode');
+      element.innerText = textCopyChanges;
+    },
+    restoreTextCopyChange: ({ domItemData }) => {
+      // Used in TasksSummary view.
+      const { targetId, targetDomPath, originalInnerHtml, designChangesStillApplied } = domItemData;
+      const element = findElement(targetId, targetDomPath);
+
+      if (!element) { return; }
+
+      // scroll element into view and unapply text change
+      element.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center'});
+      element.innerHTML = originalInnerHtml;
+
+      // unhighlight element if design changes aren't applied
+      if (!designChangesStillApplied) {
+        element.classList.remove('CollabSauce__outline__Non-Edit_Mode');
+      }
+    },
+    restoreTextCopyChangeKeepSelected: ({ domItemData }) => {
+      // Similar to restoreTextCopyChange, but doesn't unselect the task. Used in TaskDetail view.
+      const { targetId, targetDomPath, originalInnerHtml } = domItemData;
+      const element = findElement(targetId, targetDomPath);
+
+      if (!element) { return; }
+
+      // unapply design changes
+      element.innerHTML = originalInnerHtml;
+    },
+
   };
 
   const findElement = (targetId, targetDomPath) => {
