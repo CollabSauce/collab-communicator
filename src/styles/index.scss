@@ -1,4 +1,5 @@
 @import './gridRuler';
+@import './webPaint';
 
 .CollabSauce__outline__ {
   outline: 2px solid #00D27B !important;
@@ -51,7 +52,7 @@
   box-shadow: 0px 7px 14px rgba(65, 69, 88, 0.1), 0px 3px 6px rgba(0, 0, 0, 0.07);
 
   &.show-full-toolbar {
-    width: 340px;
+    width: 340px; /* This needs to match what's in src/scripts/WebPaint/Toolbar.js */
   }
 }
 

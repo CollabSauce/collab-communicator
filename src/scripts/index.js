@@ -9,6 +9,7 @@ import { getDomPath } from './getDomPath';
 import { createBanner } from './createBanner';
 import { copyHtml } from './copyHtml';
 import { GridRuler } from './GridRuler/GridRuler';
+import { WebPaint } from './WebPaint/WebPaint';
 import config from './config';
 
 if (process.env.NODE_ENV === 'development') {
@@ -298,6 +299,9 @@ ready.docReady(() => {
     },
     toggleGridlines: ({ showGridlines }) => {
       GridRuler(showGridlines);
+    },
+    toggleWebPaint: ({ showWebPaint }) => {
+      WebPaint(showWebPaint);
     },
     setTextCopy: ({ innerText }) => {
       currentClickTarget.innerText = innerText;

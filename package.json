@@ -58,6 +58,7 @@
     "@babel/polyfill": "^7.10.4",
     "@sentry/browser": "^5.26.0",
     "@sentry/tracing": "^5.26.0",
+    "@svg-drawing/core": "^4.0.0",
     "core-js": "^3.6.5",
     "events": "^3.2.0",
     "jquery": "^3.5.1",

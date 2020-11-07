@@ -1,0 +1,121 @@
+
+.collabsauce-web-paint {
+  position: fixed;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+}
+
+
+$cursor-colors: black, white, red, green, blue;
+$cursor-sizes: 15, 20, 25, 30, 35;
+@each $color in $cursor-colors {
+  @each $size in $cursor-sizes {
+    .collabsauce-web-paint.cursor-#{$color}.cursor-#{$size} {
+      cursor: url('/public/assets/cursors/#{$color}-#{$size}.png') $size/2 $size/2, auto;
+    }
+  }
+}
+
+
+.collabsauce-web-paint-toolbar {
+  position: fixed;
+  z-index: 2147483599; /* iframe zindex minus 1 */
+  background-color: #5A5A5A;
+  border-radius: 10px;
+  bottom: 15px;
+  width: 300px; /* this needs to match what's in src/scripts/WebPaint/Toolbar.js */
+  padding: 10px;
+  box-shadow: 4px 5px 9px 0px #505050;
+}
+
+.collabsauce-web-paint-toolbar-icons-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+$toolbar-icon-width: 30px;
+$toolbar-icon-height: 30px;
+
+.collabsauce-web-paint-toolbar-mover-container {
+  cursor: grab;
+  width: $toolbar-icon-width;
+  height: $toolbar-icon-height;
+  background: rgb(169, 169, 169);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50px;
+  margin-bottom: 5px;
+
+  svg {
+    width: 10px;
+    height: 10px;
+    fill: #3C3C3C;
+  }
+}
+
+.collabsauce-web-paint-toolbar-undo-clear-container {
+  display: flex;
+
+  img {
+    cursor: pointer;
+    width: $toolbar-icon-width;
+    height: $toolbar-icon-height;
+  }
+}
+
+.collabsauce-web-paint-clear {
+  margin-left: 7px;
+}
+
+.collabsauce-web-paint-toolbar-buttons-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+$button-width: 45px;
+$button-height: 35px;
+
+.collabsauce-webpaint-button-color {
+  cursor: pointer;
+  width: $button-width;
+  height: $button-height;
+  padding: 0px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+
+  &:hover {
+    opacity: 0.4;
+  }
+
+  &.selected {
+    border: 1px solid orange;
+  }
+}
+
+.collabsauce-web-paint-button-size-container {
+  width: $button-width;
+  height: $button-height;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.collabsauce-webpaint-button-size {
+  cursor: pointer;
+  padding: 0px;
+  border: 1px solid transparent;
+  border-radius: 100%;
+
+  &:hover {
+    opacity: 0.4;
+  }
+
+  &.selected {
+    border: 1px solid orange;
+  }
+}
+
