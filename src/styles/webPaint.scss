@@ -8,7 +8,7 @@
 }
 
 
-$cursor-colors: black, white, red, green, blue;
+$cursor-colors: 'black', 'white', red, green, blue;
 $cursor-sizes: 15, 20, 25, 30, 35;
 @each $color in $cursor-colors {
   @each $size in $cursor-sizes {
