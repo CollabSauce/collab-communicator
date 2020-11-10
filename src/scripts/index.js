@@ -207,10 +207,10 @@ ready.docReady(() => {
         iframe.classList.remove('collab-sauce-frame-half', 'collab-sauce-frame-full');
       }
     },
-    getInfoForCreateTask: () => {
-      if (!currentClickTarget.parentElement || !currentClickTarget.parentNode) {
+    getInfoForCreateTask: ({ clickTargetRequired }) => {
+      if (clickTargetRequired && (!currentClickTarget || !currentClickTarget.parentElement || !currentClickTarget.parentNode)) {
         // if the element was removed, don't create a task. tell the iframe about it.
-        // NOTE: I think `parentElement` and `parentNode` - checking for either just incase
+        // NOTE: I think `parentElement` and `parentNode` works - checking for either just incase
         const message = { type: 'createTaskFailNoElement' };
         document.getElementById('collab-sauce-iframe').contentWindow.postMessage(JSON.stringify(message), iframeSrc);
       } else {

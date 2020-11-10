@@ -7,6 +7,7 @@ export const Toolbar = ({ setDrawColor, setDrawSize, undoDrawAction }) => {
   const toolbarDiv = document.createElement('div');
   toolbarDiv.className = 'collabsauce-web-paint-toolbar';
   toolbarDiv.style.left = `${((window.innerWidth - IFrameWidth) / 2) - (ToolbarWidth / 2)}px`;
+  toolbarDiv.style.bottom = '15px';
 
   // remove clear button. TODO: add in later?
   // <img src="${config.currentHost}/public/assets/clear.png" class="collabsauce-web-paint-clear" />
@@ -116,8 +117,8 @@ function makeItDraggable(toolbarDiv, moverElement) {
     pos4 = e.clientY;
     // set the element's new position:
     toolbarDiv.style.left = (toolbarDiv.offsetLeft - pos1) + 'px';
-    const currentBottom = window.innerHeight - (toolbarDiv.offsetTop + toolbarDiv.offsetHeight);
-    toolbarDiv.style.bottom = (currentBottom + pos2) + 'px';
+    toolbarDiv.style.top = (toolbarDiv.offsetTop - pos2) + 'px';
+    toolbarDiv.style.removeProperty('bottom');
   }
 
   function closeDragElement() {
