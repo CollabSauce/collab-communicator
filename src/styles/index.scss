@@ -1,3 +1,5 @@
+@import './variables';
+@import './loader';
 @import './gridRuler';
 @import './webPaint';
 
@@ -39,10 +41,8 @@
   }
 }
 
-#collab-sauce-iframe {
-  z-index: 2147483600;
-  /* same zIndex that intercom uses */
-  // z-index: 2147483647;
+@mixin collab-sauce-iframe {
+  z-index: $collab-sauce-base-z-index;
   position: fixed;
   cursor: initial;
   border: none;
@@ -50,10 +50,20 @@
   -webkit-box-shadow:: 0px 7px 14px rgba(65, 69, 88, 0.1), 0px 3px 6px rgba(0, 0, 0, 0.07);
   -moz-box-shadow:: 0px 7px 14px rgba(65, 69, 88, 0.1), 0px 3px 6px rgba(0, 0, 0, 0.07);
   box-shadow: 0px 7px 14px rgba(65, 69, 88, 0.1), 0px 3px 6px rgba(0, 0, 0, 0.07);
+}
+
+#collab-sauce-iframe {
+  @include collab-sauce-iframe;
 
   &.show-full-toolbar {
     width: 340px; /* This needs to match what's in src/scripts/WebPaint/Toolbar.js */
   }
+}
+
+#collab-sauce-iframe-placeholder {
+  @include collab-sauce-iframe;
+  z-index: $collab-sauce-base-z-index - 1;
+  background-color: white;
 }
 
 .collab-sauce-frame-right {
@@ -85,9 +95,7 @@
 }
 
 .collab-sauce-sauceButton {
-  z-index: 2147483600;
-  /* same zIndex that intercom uses */
-  // z-index: 2147483647;
+  z-index: $collab-sauce-base-z-index;
   position: fixed;
   cursor: pointer;
   right: 30px;

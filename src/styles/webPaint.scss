@@ -5,7 +5,7 @@
   bottom: 0px;
   left: 0px;
   right: 0px;
-  z-index: 10000;
+  z-index: $collab-sauce-base-z-index - 2;
 }
 
 
@@ -22,7 +22,7 @@ $cursor-sizes: 15, 20, 25, 30, 35;
 
 .collabsauce-web-paint-toolbar {
   position: fixed;
-  z-index: 2147483599; /* iframe zindex minus 1 */
+  z-index: $collab-sauce-base-z-index - 1;
   background-color: #5A5A5A;
   border-radius: 10px;
   width: 300px; /* this needs to match what's in src/scripts/WebPaint/Toolbar.js */

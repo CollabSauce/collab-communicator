@@ -7,6 +7,7 @@ import '../styles/index.scss';
 import { ready } from './docready';
 import { getDomPath } from './getDomPath';
 import { createBanner } from './createBanner';
+import { createIframePlaceholder } from './createIframePlaceholder';
 import { copyHtml } from './copyHtml';
 import { GridRuler } from './GridRuler/GridRuler';
 import { WebPaint } from './WebPaint/WebPaint';
@@ -38,6 +39,11 @@ const {
 
 ready.docReady(() => {
   const isChromeExtension = checkIfFromChromeExtension();
+
+  const placeholderDivId = 'collab-sauce-iframe-placeholder';
+  if (isChromeExtension) {
+    createIframePlaceholder(placeholderDivId);
+  }
 
   // load styles and scripts
   const iframe = document.createElement('iframe');
@@ -153,8 +159,10 @@ ready.docReady(() => {
       currentClickTarget.style.cssText = originalCssText;
     },
     hideToolbar: () => {
+      if (!isChromeExtension) {
+        document.getElementById('collab-sauce-sauceButton').classList.remove('collab-sauce-hidden');
+      }
       document.getElementById('collab-sauce-iframe').classList.add('collab-sauce-hidden');
-      document.getElementById('collab-sauce-sauceButton').classList.remove('collab-sauce-hidden');
       document.getElementById('collab-sauce-iframe').classList.remove('show-full-toolbar');
       removeElementSelections();
     },
@@ -390,7 +398,7 @@ ready.docReady(() => {
       // putting this in try block because this will fail when ths method is called on initial load.
       document.body.removeChild(shadowDivHolder);
     } catch (err) {
-      Sentry.captureException(err);
+      Sentry.captureException(err); // TODO: Get rid of this captureException?
     }
     document.getElementById('collab-sauce-iframe').classList.remove('collab-sauce-hidden');
     removeElementSelections();
@@ -438,14 +446,12 @@ ready.docReady(() => {
   const resetAll = () => {
     // called when the iframe loads (also in development when it refreshes)
     exitSelectionMode();
-    if (!isChromeExtension) {
-      messageRouting.hideToolbar();
-    }
+    messageRouting.hideToolbar();
 
     // wait a few seconds to send a message to the iframe, as `iframe.onload` will fire in
     // chrome when the react app is ready, but on safari the react-app may not be ready
     // to receive messages, which causes errors if it can't receive messages.
-    const onInitTimeout = isChromeExtension ? 300 : 2500;
+    const onInitTimeout = isChromeExtension ? 1000 : 2500;
     const showElementOnInit = isChromeExtension ? showIframe : showSauceButton;
     setTimeout(sendMessageToIframeOnInit, onInitTimeout);
     setTimeout(showElementOnInit, onInitTimeout);
@@ -495,6 +501,17 @@ ready.docReady(() => {
 
   const showIframe = () => {
     iframe.classList.remove('collab-sauce-hidden');
+    // put a delay on it, so the iframe has time to render;
+    setTimeout(() => {
+      removeElementIfExists(placeholderDivId);
+    }, 1000);
+  };
+
+  const removeElementIfExists = (elementId) => {
+    const element = document.getElementById(elementId);
+    if (element) {
+      document.body.removeChild(element);
+    }
   };
 
   // listen on all messages from iframe
