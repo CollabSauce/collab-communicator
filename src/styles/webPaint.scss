@@ -1,10 +1,8 @@
 
 .collabsauce-web-paint {
-  position: fixed;
+  position: absolute;
   top: 0px;
-  bottom: 0px;
   left: 0px;
-  right: 0px;
   z-index: $collab-sauce-base-z-index - 2;
 }
 
