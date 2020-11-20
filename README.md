@@ -32,6 +32,16 @@ yarn build-production
 yarn deploy-production
 ```
 
+##### When running as a chrome-extension locally
+```
+yarn build-extension-local
+http-server build
+```
+and in a different terminal window:
+```
+ngrok http -host-header="localhost:8080" 8080
+```
+
 ### Features:
 
 * ES6 Support via [babel](https://babeljs.io/) (v7)

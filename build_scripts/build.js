@@ -106,8 +106,11 @@ function rebuildWithUpdatedWidgetJs(appHash, chunkHash) {
   const [appHash2, chunkHash2] = getOutputHashes();
   if (appHash === appHash2 && chunkHash === chunkHash2) {
     const deployCommand = chalk.green.bold.underline(`yarn deploy-${process.env.ENV}`)
-    console.log(chalk.green(`widget.js succesfully built with appHash and chunkHash. Uploading to sentry`));
-    uploadBuildToSentry();
+    console.log(chalk.green(`widget.js succesfully built with appHash and chunkHash.`));
+    if (process.env.ENV !== 'development') {
+      console.log(chalk.green(`Uploading to sentry.`));
+      uploadBuildToSentry();
+    }
   } else {
     console.log(chalk.red('appHash or chunkHash did not match after rebuild. DO NOT DEPLOY'));
   }

@@ -5,6 +5,7 @@
   "scripts": {
     "build-production": "ENV=production node ./build_scripts/build.js",
     "build-staging": "ENV=staging node ./build_scripts/build.js",
+    "build-extension-local": "ENV=development node ./build_scripts/build.js",
     "start": "ENV=development PROJECT_KEY=UJ2UhsD9NOeOruyD45ptxLXKcSgQHObi webpack-dev-server --open --config webpack/webpack.config.dev.js",
     "deploy-production": "netlify deploy --prod --site a8298587-aaef-466a-b121-7ffdbaf95fda",
     "deploy-staging": "netlify deploy --prod --site 505baed5-b5a7-411a-b17b-0715ddbb0507"

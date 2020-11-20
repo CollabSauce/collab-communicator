@@ -14,7 +14,9 @@ import config from './config';
 
 if (process.env.NODE_ENV === 'development') {
   require('../index.html');
-} else {
+} else if (process.env.ENV !== 'development') {
+  // serving the chrome extension locally, it does a production build ("so NODE_ENV = production"),
+  // but the "ENV" is 'development'. So that's why we need to guard against it above.
   Sentry.init({
     dsn: 'https://55cc4cd140d6445493757874c03d7b39@o460199.ingest.sentry.io/5461589',
     release: process.env.SENTRY_RELEASE,
@@ -31,12 +33,12 @@ if (process.env.NODE_ENV === 'development') {
 
 const {
   currentHost,
-  developmentProjectKey,
   iframeSrc,
-  isDevelopment
 } = config;
 
 ready.docReady(() => {
+  const isChromeExtension = checkIfFromChromeExtension();
+
   // load styles and scripts
   const iframe = document.createElement('iframe');
   iframe.src = iframeSrc;
@@ -44,15 +46,6 @@ ready.docReady(() => {
   iframe.id = 'collab-sauce-iframe';
   iframe.onload = () => { resetAll(); };
   document.body.appendChild(iframe);
-
-  if (isDevelopment) {
-    // manually add a <script> to the header that will mimic production.
-    const script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.async = true;
-    script.src = `${currentHost}?projectKey=${developmentProjectKey}`;
-    document.head.appendChild(script);
-  }
 
   let shadowDivHolder;
   let currentMouseOverTarget;
@@ -213,14 +206,17 @@ ready.docReady(() => {
         // NOTE: I think `parentElement` and `parentNode` works - checking for either just incase
         const message = { type: 'createTaskFailNoElement' };
         document.getElementById('collab-sauce-iframe').contentWindow.postMessage(JSON.stringify(message), iframeSrc);
+      } else if (isChromeExtension) {
+        const dimensions = getDimensionsForChromeScreenshot();
+        const message = { type: 'collabSauceCaptureScreenshot', dimensions };
+        window.postMessage(JSON.stringify(message), '*');
       } else {
         const html = copyHtml();
-        const width = window.innerWidth;
-        const height = window.innerHeight;
-        const url_origin = window.location.href;
-        const message = { type: 'createTaskWithInfo', html, width, height, url_origin };
-        document.getElementById('collab-sauce-iframe').contentWindow.postMessage(JSON.stringify(message), iframeSrc);
+        sendInfoForCreateTask({ html });
       }
+    },
+    collabSauceScreenshotResult: ({ dataURL, elementDataURL }) => {
+      sendInfoForCreateTask({ dataURL, elementDataURL });
     },
     exitTaskCreationMode: () => {
       removeElementSelections();
@@ -353,7 +349,32 @@ ready.docReady(() => {
       // unapply design changes
       element.innerHTML = originalInnerHtml;
     },
+    chromeExtensionShowIframe: () => {
+      showIframe();
+    }
+  };
 
+  const getDimensionsForChromeScreenshot = () => {
+    const dimensions = {};
+    let elem = currentClickTarget;
+    dimensions.top = -window.scrollY;
+    dimensions.left = -window.scrollX;
+    while (elem !== document.body) {
+      dimensions.top += elem.offsetTop;
+      dimensions.left += elem.offsetLeft;
+      elem = elem.offsetParent;
+    }
+    dimensions.width = currentClickTarget.offsetWidth;
+    dimensions.height = currentClickTarget.offsetHeight;
+    return dimensions;
+  };
+
+  const sendInfoForCreateTask = (data) => {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    const url_origin = window.location.href;
+    const message = { type: 'createTaskWithInfo', width, height, url_origin, ...data };
+    document.getElementById('collab-sauce-iframe').contentWindow.postMessage(JSON.stringify(message), iframeSrc);
   };
 
   const findElement = (targetId, targetDomPath) => {
@@ -417,13 +438,17 @@ ready.docReady(() => {
   const resetAll = () => {
     // called when the iframe loads (also in development when it refreshes)
     exitSelectionMode();
-    messageRouting.hideToolbar();
+    if (!isChromeExtension) {
+      messageRouting.hideToolbar();
+    }
 
     // wait a few seconds to send a message to the iframe, as `iframe.onload` will fire in
     // chrome when the react app is ready, but on safari the react-app may not be ready
     // to receive messages, which causes errors if it can't receive messages.
-    setTimeout(sendMessageToIframeOnInit, 2500);
-    setTimeout(showSauceButton, 2500);
+    const onInitTimeout = isChromeExtension ? 300 : 2500;
+    const showElementOnInit = isChromeExtension ? showIframe : showSauceButton;
+    setTimeout(sendMessageToIframeOnInit, onInitTimeout);
+    setTimeout(showElementOnInit, onInitTimeout);
   };
 
   const sendMessageToIframeOnInit = () => {
@@ -431,18 +456,16 @@ ready.docReady(() => {
     const setParentMessage = { type: 'setParentOrigin' };
     document.getElementById('collab-sauce-iframe').contentWindow.postMessage(JSON.stringify(setParentMessage), iframeSrc);
 
-    // tell the iframe the current projectKey
-    const collabScriptSrc = `${currentHost}?projectKey=`;
-    const collabScriptSrcWithSlash = `${currentHost}/?projectKey=`;
-    const sources = [];
-    document.getElementsByTagName('script').forEach(script => sources.push(script.src));
-    const widgetSrc = sources.find(src => {
-      const scriptSrc = src || '';
-      return scriptSrc.startsWith(collabScriptSrc) || scriptSrc.startsWith(collabScriptSrcWithSlash);
-    });
-    const projectKey = widgetSrc.slice(widgetSrc.search('projectKey=') + 'projectKey='.length);
-    const projectKeyMessage = { type: 'projectKey', projectKey };
-    document.getElementById('collab-sauce-iframe').contentWindow.postMessage(JSON.stringify(projectKeyMessage), iframeSrc);
+    if (isChromeExtension) {
+      // tell the iframe it is a chrome-extension, and the projectKey needs be obtained by the iframe itself
+      const projectKeyMessage = { type: 'isChromeExtension' };
+      document.getElementById('collab-sauce-iframe').contentWindow.postMessage(JSON.stringify(projectKeyMessage), iframeSrc);
+    } else {
+      // tell the iframe the current projectKey
+      const projectKey = process.env.ENV === 'development' ? process.env.PROJECT_KEY : getProjectKeyFromUrl();
+      const projectKeyMessage = { type: 'projectKey', projectKey };
+      document.getElementById('collab-sauce-iframe').contentWindow.postMessage(JSON.stringify(projectKeyMessage), iframeSrc);
+    }
 
     // scroll to element if the query-params dictate it and the element exists
     const qps = queryString.parse(window.location.search);
@@ -470,22 +493,50 @@ ready.docReady(() => {
     document.getElementById('collab-sauce-sauceButton').classList.remove('collab-sauce-force-hidden');
   };
 
+  const showIframe = () => {
+    iframe.classList.remove('collab-sauce-hidden');
+  };
+
   // listen on all messages from iframe
   window.addEventListener('message', receiveMessage);
 
-  // create the sauceButton
-  const sauceButton = document.createElement('div');
-  sauceButton.id = 'collab-sauce-sauceButton';
-  sauceButton.className = 'collab-sauce-sauceButton collab-sauce-force-hidden'; // hide by default, will show when `resetAll` is called
-  const sauceButtonImg = document.createElement('img');
-  sauceButtonImg.src = `${currentHost}/public/assets/sauce-bottle.svg`;
-  sauceButtonImg.className = 'collab-sauce-sauceBottle';
-  sauceButton.appendChild(sauceButtonImg);
-  document.body.appendChild(sauceButton);
+  if (!isChromeExtension) {
+    // create the sauceButton
+    const sauceButton = document.createElement('div');
+    sauceButton.id = 'collab-sauce-sauceButton';
+    sauceButton.className = 'collab-sauce-sauceButton collab-sauce-force-hidden'; // hide by default, will show when `resetAll` is called
+    const sauceButtonImg = document.createElement('img');
+    sauceButtonImg.src = `${currentHost}/public/assets/sauce-bottle.svg`;
+    sauceButtonImg.className = 'collab-sauce-sauceBottle';
+    sauceButton.appendChild(sauceButtonImg);
+    document.body.appendChild(sauceButton);
 
-  // listen on click of the button
-  sauceButton.addEventListener('click', () => {
-    sauceButton.classList.add('collab-sauce-hidden');
-    iframe.classList.remove('collab-sauce-hidden');
-  });
+    // listen on click of the button
+    sauceButton.addEventListener('click', () => {
+      sauceButton.classList.add('collab-sauce-hidden');
+      iframe.classList.remove('collab-sauce-hidden');
+    });
+  }
 });
+
+const getProjectKeyFromUrl = () => {
+  const collabScriptSrc = `${currentHost}?projectKey=`;
+  const collabScriptSrcWithSlash = `${currentHost}/?projectKey=`;
+  const sources = [];
+  document.getElementsByTagName('script').forEach(script => sources.push(script.src));
+  const widgetSrc = sources.find(src => {
+    const scriptSrc = src || '';
+    return scriptSrc.startsWith(collabScriptSrc) || scriptSrc.startsWith(collabScriptSrcWithSlash);
+  });
+  const key = widgetSrc.slice(widgetSrc.search('projectKey=') + 'projectKey='.length);
+  return key;
+};
+
+const checkIfFromChromeExtension = () => {
+  const sources = [];
+  document.getElementsByTagName('script').forEach(script => sources.push(script.src));
+  return !!sources.find(src => {
+    const scriptSrc = src || '';
+    return scriptSrc.includes('isCollabSauceChromeExtension=true');
+  });
+};
