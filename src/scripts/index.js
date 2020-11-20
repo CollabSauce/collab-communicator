@@ -123,6 +123,13 @@ ready.docReady(() => {
     if (shadowDivHolder.isEqualNode(e.target) || isParent(e.target, shadowDivHolder)) {
       return;
     }
+    if (e.target.tagName.toUpperCase() === 'BODY') {
+      // We don't want to allow editing of body, because the "Text Changes"
+      // feature of our product sets the innerHtml of whatever was selected.
+      // So if we allow editing the innerHTML of the body, the collab-sauce-iframe
+      // might be removed, which causes bugs on the user's end.
+      return;
+    }
 
     if (currentMouseOverTarget) {
       currentMouseOverTarget.classList.remove('CollabSauce__outline__');
