@@ -123,13 +123,6 @@ ready.docReady(() => {
     if (shadowDivHolder.isEqualNode(e.target) || isParent(e.target, shadowDivHolder)) {
       return;
     }
-    if (e.target.tagName.toUpperCase() === 'BODY') {
-      // We don't want to allow editing of body, because the "Text Changes"
-      // feature of our product sets the innerHtml of whatever was selected.
-      // So if we allow editing the innerHTML of the body, the collab-sauce-iframe
-      // might be removed, which causes bugs on the user's end.
-      return;
-    }
 
     if (currentMouseOverTarget) {
       currentMouseOverTarget.classList.remove('CollabSauce__outline__');
@@ -318,6 +311,19 @@ ready.docReady(() => {
       currentClickTarget.innerText = innerText;
     },
     restoreTextCopyEditChanges: ({ originalTextHtml }) => {
+      // NOTE: when the currentClickTarget is the `body`,
+      // the TextCopyEditor componemt in collab-integration-tool won't be rendered,
+      // so this method will never be called.
+
+      // We don't want to allow editing of body, because the "Text Changes" (i.e the TextCopyEditor component)
+      // feature of our product sets the innerHtml of whatever was selected.
+      // So if we allow editing the innerHTML of the body, the collab-sauce-iframe
+      // might be removed, which causes bugs on the user's end.
+
+      // If it were called with the `currentClickTarget` as the `body`, setting `innerHTML`
+      // would screw with the iframe (i.e collab-integration-tool). I.e, we don't need
+      // to guard against the `currentClickTarget` being the `body`, because this method will
+      // never be called when the `currentClickTarget` is the body.
       currentClickTarget.innerHTML = originalTextHtml;
     },
 
