@@ -81,6 +81,7 @@ ready.docReady(() => {
     }
 
     e.preventDefault();
+    e.stopPropagation();
     document.getElementById('collab-sauce-iframe').classList.remove('collab-sauce-hidden');
     document.body.removeChild(shadowDivHolder);
     document.body.removeEventListener('mouseover', onMouseOver);
