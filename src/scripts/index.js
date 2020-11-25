@@ -401,7 +401,7 @@ ready.docReady(() => {
 
   const findElement = (targetId, targetDomPath) => {
     let element = document.getElementById(targetId);
-    if (!element) {
+    if (!element && targetDomPath) {
       element = document.querySelector(targetDomPath);
     }
     return element;
